@@ -30,6 +30,9 @@ export class Client extends BaseEntity {
     @Column()
     zip: string
 
+    @Column()
+    nif: number
+
     @OneToMany(type => Deal, deal => deal.client)
     deals: Deal[]
 

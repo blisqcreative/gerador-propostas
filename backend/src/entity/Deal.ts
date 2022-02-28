@@ -12,6 +12,7 @@ import {Client} from "./Client"
 import {User} from "./User"
 import {Task} from "./Task"
 import {TaskToDeal} from "./TaskToDeal"
+import {Type} from "./Type"
 
 @Entity()
 export class Deal extends BaseEntity{
@@ -21,9 +22,6 @@ export class Deal extends BaseEntity{
     @Column()
     date: Date
 
-    @Column()
-    type: string
-
     @ManyToOne(type => Client, client => client.deals)
     client: Client
 
@@ -32,6 +30,9 @@ export class Deal extends BaseEntity{
 
     @OneToMany(() => TaskToDeal, taskToDeal => taskToDeal.deal)
     taskToDeals: TaskToDeal[];
+
+    @ManyToOne(() => Type, type => type.deals)
+    type: Type
 
 
 }
