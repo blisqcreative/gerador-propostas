@@ -13,7 +13,7 @@ export const TaskCheckBox = (task) => {
     }
     const handleHours = (e) => {
         setHours(e.target.value);
-    }g
+    }
     const handleCostPrice = (e) => {
         setCostPrice(e.target.value);
     }
