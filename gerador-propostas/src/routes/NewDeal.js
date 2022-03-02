@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react"
+import {TaskCheckBox} from "../components/TaskCheckBox"
 
 function NewDeal() {
     const [types, setTypes] = useState([]);
@@ -10,6 +11,7 @@ function NewDeal() {
     const [selectedTasks, setSelectedTasks] = useState([]);
     const [clients, setClients] = useState([]);
     const [selectedClient, setSelectedClient] = useState(null);
+    const [idTasks, setIdTasks] = useState([]);
 
     useEffect(async () => {
         await getTypes();
@@ -64,24 +66,46 @@ function NewDeal() {
         const {value} = e.target;
         setSelectedClient(value);
     };
-    const handleBox = (e) => {
+    const handleBox = (e, taskId) => {
         const {value} = e.target;
-        console.log("nome:", value);
 
-        if(e.target.checked){
-            setSelectedTasks(prev => [...prev,value]);
-        }else{
+        if (e.target.checked) {
+            setSelectedTasks(prev => [...prev, value]);
+            setIdTasks(prev => [...prev, taskId]);
+
+        } else {
             setSelectedTasks(prev => prev.filter(item => item !== value));
+            setIdTasks(prev => prev.filter(item => item !== taskId));
         }
     };
+
+    const addDeal = () => {
+        const data = {
+            typeId: selectedType,
+            clientId: selectedClient,
+            tasksId: idTasks
+        };
+        fetch('http://localhost:3000/deal', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(res => res.json())
+            .then(data => {
+            })
+            .catch(err => console.log(err));
+    };
+
+
     return (<div>
         <h1 className="text-3xl text-center">Nova Proposta</h1>
         <label htmlFor="type">Tipo:</label>
         <select name="type" className="mt-4 ml-2" onChange={handleType} defaultValue="DEFAULT">
             <option value="DEFAULT" disabled>Tipo</option>
-            {types.map(type => (<option key={type.id} value={type.name}>{type.name}</option>))}
+            {types.map(type => (<option key={type.id} value={type.id}>{type.name}</option>))}
         </select>
-        <label htmlFor="client" >Client:</label>
+        <label htmlFor="client">Client:</label>
         <select name="client" className="mt-4 ml-2" onChange={handleClient} defaultValue="DEFAULT">
             <option value="DEFAULT" disabled>Cliente</option>
             {clients.map(client => (<option key={client.id} value={client.id}>{client.name}</option>))}
@@ -96,27 +120,23 @@ function NewDeal() {
             <div className="grid-cols-2 grid">
                 <div className="mt-4">
                     {selectedService === "all" ? (tasks.map(task => (<div key={task.id} className="flex items-center">
-                        <label>
-                            <input type="checkbox" className="mr-2" value={task.title} onChange={handleBox}/>
-                            {task.title}
-                        </label>
+                        <TaskCheckBox {...task} onChange={(e) => handleBox(e, task.id)}/>
                     </div>))) : (tasks.filter(task => task.serviceId === parseInt(selectedService)).map(task => (
                         <div key={task.id} className="flex items-center">
-                            <label>
-                                <input type="checkbox" className="mr-2" value={task.title} onChange={handleBox}/>
-                                {task.title}
-                            </label>
+                            <TaskCheckBox {...task} onChange={(e) => handleBox(e, task.id)} />
                         </div>)))}
                 </div>
                 <div className="mt-4">
-                    <p>Tasks selecionadas</p>
+                    <p className="text-2xl font-bold">Tasks selecionadas</p>
                     <div className="">
-                        {selectedTasks && selectedTasks.map((task, index) => (<div key={index} className="flex items-center">
-                            <label>{task}</label>
-                        </div>))}
+                        {selectedTasks && selectedTasks.map((task, index) => (
+                            <div key={index} className="flex items-center">
+                                <label>{task}</label>
+                            </div>))}
                     </div>
                 </div>
             </div>
+            <button onClick={addDeal} className="mt-4 bg-blue-500 text-white p-2 rounded-lg">Criar Proposta</button>
         </div>
 
     </div>)

@@ -17,7 +17,6 @@ export const NewClient = () => {
     const handleNif = async (e) => {
         setNifExists(false);
         setNif(e.target.value);
-        console.log(nif.length);
         if (nif.length === 8) {
             const res = await fetch("http://localhost:3000/client/" + nif);
 
@@ -41,7 +40,6 @@ export const NewClient = () => {
             state
         }
         let a = JSON.stringify(data);
-        console.log(a);
         const res = await fetch("http://localhost:3000/client",{
             method: "POST",
             headers: {

@@ -1,9 +1,9 @@
-import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm"
+import {BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm"
 import {Task} from "./Task"
 import {Deal} from "./Deal"
 
 @Entity()
-export class TaskToDeal {
+export class TaskToDeal extends BaseEntity{
     @PrimaryGeneratedColumn()
     taskToDealId: number
 

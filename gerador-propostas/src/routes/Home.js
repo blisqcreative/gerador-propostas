@@ -31,11 +31,6 @@ function Home() {
         setTaskDescription(event.target.value)
     }
     const addTask = async (id, taskName, taskDesc) => {
-        console.log({
-            "serviceId": id,
-            "title": `${taskName}`,
-            "description": `${taskDesc}`
-        })
         const res = await fetch('http://localhost:3000/task/', {
             method: 'POST',
             headers: {

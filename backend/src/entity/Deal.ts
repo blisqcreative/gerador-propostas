@@ -1,5 +1,6 @@
 import {
-    BaseEntity,
+    AfterInsert,
+    BaseEntity, BeforeInsert,
     Column,
     Entity,
     ManyToMany,
@@ -16,8 +17,12 @@ import {Type} from "./Type"
 
 @Entity()
 export class Deal extends BaseEntity{
-    @PrimaryColumn()
-    id: string
+
+    @PrimaryGeneratedColumn()
+    id: number
+
+    @Column({nullable: true})
+    inner_id: string
 
     @Column()
     date: Date

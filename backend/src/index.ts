@@ -9,6 +9,8 @@ import {Task} from "./entity/Task";
 import {Service} from "./entity/Service"
 import {Type} from "./entity/Type"
 import {Client} from "./entity/Client"
+import {Deal} from "./entity/Deal"
+import {TaskToDeal} from "./entity/TaskToDeal"
 
 
 
@@ -110,6 +112,40 @@ import {Client} from "./entity/Client"
         }
         res.json(client);
     });
+    app.post("/deal", async (req, res) => {
+        const {clientId, tasksId, typeId} = req.body;
+        const date = new Date();
+        let tasks : Promise<TaskToDeal>[] = [];
+
+        const client = await Client.findOne({where: {id: clientId}});
+        if(!client) {
+            return res.status(400).send("Client not found");
+        }
+        const user = await User.findOne();
+        const type = await Type.findOne({where: {id: typeId}});
+        if(!type) {
+            return res.status(400).send("Type not found");
+        }
+
+        const deal = await Deal.create({client, user, type, date}).save();
+
+        tasksId.forEach(taskId => {
+            const taskToDeal = new TaskToDeal();
+            taskToDeal.task = taskId;
+            taskToDeal.deal = deal;
+            taskToDeal.taskId = taskId;
+            taskToDeal.hours = 2;
+            taskToDeal.sellPrice = 100;
+            taskToDeal.costPrice = 50;
+            tasks.push(taskToDeal.save());
+        });
+        await Promise.all(tasks)
+        //res.status(201).send("Deal created with id: " + deal.id);
+    });
+
+
+
+
     app.listen(3000, () => console.log('server running on port 3000'))
 
 })()
