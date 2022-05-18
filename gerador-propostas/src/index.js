@@ -7,6 +7,7 @@ import Home from "./routes/Home"
 import Login from "./routes/Login"
 import NewDeal from "./routes/NewDeal"
 import {NewClient} from "./routes/NewClient"
+import NewBriefing from "./routes/NewBriefing"
 
 const rootElement = document.getElementById("root");
 ReactDOM.render(
@@ -14,7 +15,7 @@ ReactDOM.render(
         <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/newDeal" element={<NewDeal />} />
+            <Route path="/newDeal" element={<NewBriefing />} />
             <Route path="/NewClient" element={<NewClient />} />
         </Routes>
     </BrowserRouter>,

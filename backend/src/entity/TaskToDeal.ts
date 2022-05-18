@@ -22,10 +22,10 @@ export class TaskToDeal extends BaseEntity{
     @Column()
     costPrice: number
 
-    @ManyToOne(() => Task, task => task.taskToDeals)
+    @ManyToOne(() => Task, task => task.taskToDeals, {nullable: true})
     task: Task
 
-    @ManyToOne(() => Deal, deal => deal.taskToDeals)
+    @ManyToOne(() => Deal, deal => deal.taskToDeals, {nullable: true})
     deal: Deal;
 
 

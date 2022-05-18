@@ -7,12 +7,10 @@ import bcrypt from "bcrypt";
 import {User} from "./entity/User";
 import {Task} from "./entity/Task";
 import {Service} from "./entity/Service"
-import {Type} from "./entity/Type"
 import {Client} from "./entity/Client"
 import {Deal} from "./entity/Deal"
 import {TaskToDeal} from "./entity/TaskToDeal"
-
-
+import {Department} from "./entity/Department"
 
 
 (async () => {
@@ -31,7 +29,7 @@ import {TaskToDeal} from "./entity/TaskToDeal"
             return res.status(400).send("User already exists");
         }
 
-        
+
         let new_password = await bcrypt.hash(password, 10);
 
         const user = await User.create({firstName, lastName, email, password: new_password}).save();
@@ -67,7 +65,7 @@ import {TaskToDeal} from "./entity/TaskToDeal"
 
 
         const service = await Service.findOne({where: {id: serviceId}});
-        if(!service) {
+        if (!service) {
             return res.status(400).send("Service not found");
         }
         const task = await Task.create({title, description, service}).save();
@@ -84,16 +82,12 @@ import {TaskToDeal} from "./entity/TaskToDeal"
         res.status(201).send("Service created with id: " + service.id);
     });
 
-    app.get("/types", async (req, res) => {
-        const types = await Type.find();
-        res.json(types);
-    });
 
     app.post("/client", async (req, res) => {
         const {name, person, email, phone, address, city, state, zip, nif} = req.body;
 
         const clientExists = await Client.findOne({where: {nif}});
-        if(clientExists) {
+        if (clientExists) {
             return res.status(400).send("Client already exists");
         }
 
@@ -107,7 +101,7 @@ import {TaskToDeal} from "./entity/TaskToDeal"
     app.get("/client/:nif", async (req, res) => {
         const {nif} = req.params;
         const client = await Client.findOne({where: {nif}});
-        if(!client) {
+        if (!client) {
             return res.status(400).send("Client not found");
         }
         res.json(client);
@@ -115,19 +109,16 @@ import {TaskToDeal} from "./entity/TaskToDeal"
     app.post("/deal", async (req, res) => {
         const {clientId, tasksId, typeId} = req.body;
         const date = new Date();
-        let tasks : Promise<TaskToDeal>[] = [];
+        let tasks: Promise<TaskToDeal>[] = [];
 
         const client = await Client.findOne({where: {id: clientId}});
-        if(!client) {
+        if (!client) {
             return res.status(400).send("Client not found");
         }
         const user = await User.findOne();
-        const type = await Type.findOne({where: {id: typeId}});
-        if(!type) {
-            return res.status(400).send("Type not found");
-        }
 
-        const deal = await Deal.create({client, user, type, date}).save();
+
+        const deal = await Deal.create({client, user, date}).save();
 
         tasksId.forEach(taskId => {
             const taskToDeal = new TaskToDeal();
@@ -142,8 +133,22 @@ import {TaskToDeal} from "./entity/TaskToDeal"
         await Promise.all(tasks)
         //res.status(201).send("Deal created with id: " + deal.id);
     });
+    app.get("/lastDealId", async (req, res) => {
+        const deal = await Deal.findOne({
+            order: {
+                id: "DESC"
+            }
+        });
+        if(!deal) {
+            return res.status(404).send("Deal not found");
+        }
+        res.json(deal.id);
+    });
 
-
+    app.get("/departments", async (req, res) => {
+        const departments = await Department.find();
+        res.json(departments);
+    });
 
 
     app.listen(3000, () => console.log('server running on port 3000'))

@@ -1,19 +1,8 @@
-import {
-    AfterInsert,
-    BaseEntity, BeforeInsert,
-    Column,
-    Entity,
-    ManyToMany,
-    ManyToOne,
-    OneToMany,
-    PrimaryColumn,
-    PrimaryGeneratedColumn
-} from "typeorm"
+import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm"
 import {Client} from "./Client"
 import {User} from "./User"
-import {Task} from "./Task"
 import {TaskToDeal} from "./TaskToDeal"
-import {Type} from "./Type"
+import {DepartmentToDeal} from "./DepartmentToDeal"
 
 @Entity()
 export class Deal extends BaseEntity{
@@ -27,17 +16,28 @@ export class Deal extends BaseEntity{
     @Column()
     date: Date
 
+    @Column()
+    status: string
+
+    @Column()
+    clientStatus: string
+
+    @Column()
+    timings: string
+
+    @Column()
+    work: string
+
     @ManyToOne(type => Client, client => client.deals)
     client: Client
 
     @ManyToOne(type => User, user => user.deals)
     user: User
 
-    @OneToMany(() => TaskToDeal, taskToDeal => taskToDeal.deal)
+    @OneToMany(() => TaskToDeal, taskToDeal => taskToDeal.deal, {nullable: true})
     taskToDeals: TaskToDeal[];
 
-    @ManyToOne(() => Type, type => type.deals)
-    type: Type
-
+    @OneToMany(() => DepartmentToDeal, departmentToDeal => departmentToDeal.deal, {nullable: true})
+    departmentToDeals: DepartmentToDeal[];
 
 }

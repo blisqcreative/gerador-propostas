@@ -14,7 +14,7 @@ export class Task extends BaseEntity {
     @Column()
     description: string
 
-    @OneToMany(() => TaskToDeal, taskToDeal => taskToDeal.task)
+    @OneToMany(() => TaskToDeal, taskToDeal => taskToDeal.task, {nullable: true})
     taskToDeals: TaskToDeal[];
 
     @Column("int", { nullable: true })

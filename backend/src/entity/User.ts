@@ -1,5 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany, BaseEntity} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany, BaseEntity, ManyToOne} from "typeorm";
 import {Deal} from "./Deal"
+import {Department} from "./Department"
 
 @Entity()
 export class User extends BaseEntity {
@@ -21,5 +22,8 @@ export class User extends BaseEntity {
 
     @OneToMany(type => Deal, deal => deal.user)
     deals: Deal[];
+
+    @ManyToOne(type => Department, department => department.users)
+    department: Department;
 
 }
