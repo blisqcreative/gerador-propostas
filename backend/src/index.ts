@@ -21,7 +21,9 @@ import {Department} from "./entity/Department"
     await createConnection()
 
     app.post("/user", async (req, res) => {
-        const {firstName, lastName, email, password} = req.body;
+        const {firstName, lastName, email, password, department} = req.body;
+
+        const newDepartment = await Department.findOne({where: {id: department}});
 
         const userExists = await User.findOne({where: {email}});
 
@@ -32,7 +34,7 @@ import {Department} from "./entity/Department"
 
         let new_password = await bcrypt.hash(password, 10);
 
-        const user = await User.create({firstName, lastName, email, password: new_password}).save();
+        const user = await User.create({firstName, lastName, email, password: new_password, department: newDepartment}).save();
 
         res.status(201).send("User created with id: " + user.id);
 
@@ -106,32 +108,47 @@ import {Department} from "./entity/Department"
         }
         res.json(client);
     });
-    app.post("/deal", async (req, res) => {
-        const {clientId, tasksId, typeId} = req.body;
-        const date = new Date();
-        let tasks: Promise<TaskToDeal>[] = [];
+    app.get("/deal", async (req, res) => {
+        const deals = await Deal.getDealWithDepartments();
+        res.json(deals);
+    });
+    app.get("/deal/:id", async (req, res) => {
+        const {id} = req.params;
+        const deal = await Deal.getDealWithDepartmentById(parseInt(id));
+        console.log(deal);
+        if (!deal) {
+            return res.status(404).send("Deal not found");
+        }
+        res.json(deal);
+    });
 
-        const client = await Client.findOne({where: {id: clientId}});
+    app.post("/deal", async (req, res) => {
+        const {clientId, departmentsId, clientStatus, inner_id, status, work, timings} = req.body;
+        const date = new Date();
+
+        const client = await Client.findOne({where: {nif: clientId}});
         if (!client) {
             return res.status(400).send("Client not found");
         }
         const user = await User.findOne();
+        const departments = [];
+
+        for (const departmentId of departmentsId) {
+            const department = await Department.findOne({where: {id: departmentId}});
+            if (!department) {
+                res.status(400).send("Department not found")
+            }
+            departments.push(department);
+        }
+
+        const deal = await Deal.create({client, user, date, clientStatus, status, inner_id, work, timings, departments}).save();
 
 
-        const deal = await Deal.create({client, user, date}).save();
-
-        tasksId.forEach(taskId => {
-            const taskToDeal = new TaskToDeal();
-            taskToDeal.task = taskId;
-            taskToDeal.deal = deal;
-            taskToDeal.taskId = taskId;
-            taskToDeal.hours = 2;
-            taskToDeal.sellPrice = 100;
-            taskToDeal.costPrice = 50;
-            tasks.push(taskToDeal.save());
-        });
-        await Promise.all(tasks)
-        //res.status(201).send("Deal created with id: " + deal.id);
+        if(deal){
+            res.status(201).send("Deal created with id: " + deal.id);
+        }else{
+            res.status(400).send("Error creating deal");
+        }
     });
     app.get("/lastDealId", async (req, res) => {
         const deal = await Deal.findOne({

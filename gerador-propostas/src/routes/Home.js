@@ -52,20 +52,26 @@ function Home() {
         <div>
             <h1 className="text-center">Gerador de Propostas</h1>
             <div className="container justify-center flex mx-auto">
-                <Link to="/newDeal" className="rounded border bg-purple-500 text-white p-2 m-2 hover:bg-purple-600 transition duration-500 ease-in-out"
-                        onClick={null}  >
+                <Link to="/newDeal"
+                      className="rounded border bg-purple-500 text-white p-2 m-2 hover:bg-purple-600 transition duration-500 ease-in-out">
                     Criar Nova Proposta</Link>
-                <Link to="/newType" className={`rounded border bg-purple-500 text-white p-2 m-2 hover:bg-purple-600 transition duration-500 ease-in-out`}
-                        onClick={null}  >
-                   Criar Novo Tipo</Link>
-                <Link to="/newService" className={`rounded border bg-purple-500 text-white p-2 m-2 hover:bg-purple-600 transition duration-500 ease-in-out`}
-                        onClick={null}  >
+                <Link to="/deals"
+                      className="rounded border bg-purple-500 text-white p-2 m-2 hover:bg-purple-600 transition duration-500 ease-in-out">Listar
+                    Propostas</Link>
+                <Link to="/newType"
+                      className={`rounded border bg-purple-500 text-white p-2 m-2 hover:bg-purple-600 transition duration-500 ease-in-out`}>
+                    Criar Novo Tipo</Link>
+                <Link to="/newService"
+                      className={`rounded border bg-purple-500 text-white p-2 m-2 hover:bg-purple-600 transition duration-500 ease-in-out`}
+                >
                     Criar Novo Serviço</Link>
-                <Link to="/newClient" className={`rounded border bg-purple-500 text-white p-2 m-2 hover:bg-purple-600 transition duration-500 ease-in-out`}
-                        onClick={null}  >
+                <Link to="/newClient"
+                      className={`rounded border bg-purple-500 text-white p-2 m-2 hover:bg-purple-600 transition duration-500 ease-in-out`}
+                >
                     Criar Novo Cliente</Link>
-                <Link to="/newTask" className={`rounded border bg-purple-500 text-white p-2 m-2 hover:bg-purple-600 transition duration-500 ease-in-out`}
-                        onClick={null}  >
+                <Link to="/newTask"
+                      className={`rounded border bg-purple-500 text-white p-2 m-2 hover:bg-purple-600 transition duration-500 ease-in-out`}
+                >
                     Criar Nova Tarefa</Link>
             </div>
         </div>

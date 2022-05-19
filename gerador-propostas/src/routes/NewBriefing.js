@@ -1,10 +1,17 @@
 import {useEffect, useState} from "react"
+import {useNavigate} from "react-router-dom"
 
 const NewBriefing = () => {
+    let navigate = useNavigate();
+
     const [clients, setClients] = useState([]);
     const [clientNif, setClientNif] = useState('000 000 000');
     const [briefingID, setBriefingID] = useState('');
     const [departments, setDepartments] = useState([]);
+
+    const [work, setWork] = useState('');
+    const [clientStatus, setClientStatus] = useState('');
+    const [timings, setTimings] = useState('');
 
     const [selectedDepartments, setSelectedDepartments] = useState([]);
 
@@ -23,6 +30,15 @@ const NewBriefing = () => {
         } else {
             setSelectedDepartments(selectedDepartments.filter(department => department !== e.target.value));
         }
+    }
+    const handleWork = (e) => {
+        setWork(e.target.value);
+    }
+    const handleClientStatus = (e) => {
+        setClientStatus(e.target.value);
+    }
+    const handleTimings = (e) => {
+        setTimings(e.target.value);
     }
 
     const getDepartments = async () => {
@@ -44,7 +60,6 @@ const NewBriefing = () => {
         });
 
         const json = await response.json();
-        console.log(json);
         setClients(json);
     };
     const getLatestId = async () => {
@@ -53,6 +68,10 @@ const NewBriefing = () => {
                 'Content-Type': 'application/json'
             }
         });
+        let id = 1;
+        if (response.status === 200) {
+            id = await response.json();
+        }
         const date = new Date()
         const month = date.getMonth() + 1
         const year = date.getFullYear()
@@ -63,16 +82,7 @@ const NewBriefing = () => {
         } else {
             month_twoDigits = month
         }
-
-        let id = 1;
-        if (response.status !== 200) {
-            setBriefingID("BLISQ" + year_lastTwoDigits + month_twoDigits + id)
-
-        } else {
-            const json = await response.json();
-            id = json.id;
-            setBriefingID("BLISQ" + year_lastTwoDigits + month_twoDigits + id)
-        }
+        setBriefingID("BLISQ" + year_lastTwoDigits + month_twoDigits + id)
     };
 
     const submitDeal = async () => {
@@ -81,16 +91,19 @@ const NewBriefing = () => {
                 'Content-Type': 'application/json'
             }, body: JSON.stringify({
                 inner_id: briefingID,
-                clientNif: clientNif,
-                departments: selectedDepartments,
+                clientId: clientNif,
+                timings: timings,
+                clientStatus: clientStatus,
+                work: work,
+                departmentsId: selectedDepartments,
                 status: "Open",
                 date: new Date()
             })
         });
-        const json = await response.json();
-        console.log(json);
-        if (json.status === 'success') {
-            alert('Proposta criada com sucesso');
+
+        if (response.status === 201) {
+            console.log('Deal created');
+            navigate("/home");
         } else {
             alert('Erro ao criar proposta');
         }
@@ -121,17 +134,18 @@ const NewBriefing = () => {
             <div className="flex justify-between mt-10">
                 <label className="font-bold mb-4">Situação Atual:
                     <textarea name="description" id="description" cols="30" rows="10"
-                              className="resize-none block border-2 p-4"
+                              className="resize-none block border-2 p-4" value={clientStatus}
+                              onChange={handleClientStatus}
                               placeholder="Porque nos procurou o cliente? Apresentação da proposta a desenvolver (peça, ação, campanha)."/>
                 </label>
                 <label className="font-bold mb-4">Peças a Desenvolver:
                     <textarea name="description" id="description" cols="30" rows="10"
-                              className="resize-none block border-2 p-4"
+                              className="resize-none block border-2 p-4" value={work} onChange={handleWork}
                               placeholder="Como vamos comunicar? Em que meios ou canais?"/>
                 </label>
                 <label className="font-bold mb-4">Timings:
                     <textarea name="description" id="description" cols="30" rows="10"
-                              className="resize-none block border-2 p-4"
+                              className="resize-none block border-2 p-4" value={timings} onChange={handleTimings}
                               placeholder="Prazo de execução, lançamento."/>
                 </label>
 
@@ -139,11 +153,11 @@ const NewBriefing = () => {
             <div className="mt-10">
                 <label className="font-bold mb-4">Departamentos: </label>
                 <div className="gap-y-4 flex flex-col">
-                    {departments.map(department => (
+                    {departments.map((department, index) => (
 
 
-                        <label><input type="checkbox" name="department" value={department.id}
-                                      onChange={handleDepartments}/>{department.name}</label>
+                        <label key={index}><input type="checkbox" name="department" value={department.id}
+                                                  onChange={handleDepartments}/>{department.name}</label>
 
                     ))}
                 </div>

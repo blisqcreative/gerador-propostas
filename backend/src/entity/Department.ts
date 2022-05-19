@@ -2,7 +2,7 @@ import {BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGen
 import {User} from "./User"
 import {Deal} from "./Deal"
 import {TaskToDeal} from "./TaskToDeal"
-import {DepartmentToDeal} from "./DepartmentToDeal"
+import {Product} from "./Product"
 
 @Entity()
 export class Department extends BaseEntity {
@@ -19,6 +19,9 @@ export class Department extends BaseEntity {
     @OneToMany(type => User, user => user.department)
     users: User[]
 
-    @OneToMany(() => DepartmentToDeal, departmentToDeal => departmentToDeal.department, {nullable: true})
-    departmentToDeal: DepartmentToDeal[]
+    @ManyToMany(() => Deal, deal => deal.departments)
+    deals: Deal[];
+
+    @OneToMany(type => Product, product => product.department)
+    products: Product[];
 }
