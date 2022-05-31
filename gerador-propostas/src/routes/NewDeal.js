@@ -20,7 +20,7 @@ function NewDeal() {
         await getClients();
     }, []);
     const getTypes = async () => {
-        const response = await fetch('http://localhost:3000/types', {
+        const response = await fetch('http://188.166.144.172:4000/types', {
             method: 'GET', headers: {
                 'Content-Type': 'application/json'
             }
@@ -29,7 +29,7 @@ function NewDeal() {
         setTypes(json);
     };
     const getClients = async () => {
-        const response = await fetch('http://localhost:3000/client', {
+        const response = await fetch('http://188.166.144.172:4000/client', {
             method: 'GET', headers: {
                 'Content-Type': 'application/json'
             }
@@ -38,7 +38,7 @@ function NewDeal() {
         setClients(json);
     };
     const getServices = async () => {
-        const response = await fetch('http://localhost:3000/services', {
+        const response = await fetch('http://188.166.144.172:4000/services', {
             method: 'GET', headers: {
                 'Content-Type': 'application/json'
             }
@@ -47,7 +47,7 @@ function NewDeal() {
         setServices(json);
     };
     const getTasks = async () => {
-        const response = await fetch('http://localhost:3000/tasks', {
+        const response = await fetch('http://188.166.144.172:4000/tasks', {
             method: 'GET', headers: {
                 'Content-Type': 'application/json'
             }
@@ -85,7 +85,7 @@ function NewDeal() {
             clientId: selectedClient,
             tasksId: idTasks
         };
-        fetch('http://localhost:3000/deal', {
+        fetch('http://188.166.144.172:4000/deal', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

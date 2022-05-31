@@ -18,7 +18,7 @@ export const NewClient = () => {
         setNifExists(false);
         setNif(e.target.value);
         if (nif.length === 8) {
-            const res = await fetch("http://localhost:3000/client/" + nif);
+            const res = await fetch("http://188.166.144.172:4000/client/" + nif);
 
             if (res.status !== 400) {
                 setNifExists(true);
@@ -40,7 +40,7 @@ export const NewClient = () => {
             state
         }
         let a = JSON.stringify(data);
-        const res = await fetch("http://localhost:3000/client",{
+        const res = await fetch("http://188.166.144.172:4000/client",{
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

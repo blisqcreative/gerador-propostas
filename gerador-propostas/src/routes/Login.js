@@ -12,7 +12,8 @@ function Login() {
     const handleLogin = async () => {
         setError(false);
 
-        const res = await fetch('http://localhost:3000/login', {
+        const res = await fetch('http://188.166.144.172:4000/login', {
+            credentials: 'include',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -28,9 +29,11 @@ function Login() {
             setMessage(data);
             return;
         }
+        const data = await res.json();
+        console.log(data);
+        let string = JSON.stringify(data);
+        localStorage.setItem('session', string);
         navigate('/home');
-
-
     }
 
         return (

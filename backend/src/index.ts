@@ -167,6 +167,11 @@ import {Department} from "./entity/Department"
         res.json(departments);
     });
 
+    app.post("/testWebhook", async (req, res) => {
+        const body = req.body;
+        console.log(body);
+    });
+
 
     app.listen(3000, () => console.log('server running on port 3000'))
 

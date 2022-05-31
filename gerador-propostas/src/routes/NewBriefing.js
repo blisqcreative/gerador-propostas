@@ -1,12 +1,16 @@
 import {useEffect, useState} from "react"
-import {useNavigate} from "react-router-dom"
+import {useLocation, useNavigate, useParams} from "react-router-dom"
 
 const NewBriefing = () => {
-    let navigate = useNavigate();
 
-    const [clients, setClients] = useState([]);
-    const [clientNif, setClientNif] = useState('000 000 000');
-    const [briefingID, setBriefingID] = useState('');
+    const location = useLocation()
+    let navigate = useNavigate();
+    let { id } = useParams();
+
+    const [clientNif, setClientNif] = useState(0);
+    const [client, setClient] = useState({});
+    const [clientName, setClientName] = useState('Nome do Cliente');
+    const [briefingID, setBriefingID] = useState(id);
     const [departments, setDepartments] = useState([]);
 
     const [work, setWork] = useState('');
@@ -16,8 +20,8 @@ const NewBriefing = () => {
     const [selectedDepartments, setSelectedDepartments] = useState([]);
 
     useEffect(() => {
-        getClients();
-        getLatestId();
+        getLead(id);
+
         getDepartments();
     }, []);
 
@@ -40,9 +44,22 @@ const NewBriefing = () => {
     const handleTimings = (e) => {
         setTimings(e.target.value);
     }
+    const getLead = async (id) => {
+        const response = await fetch('http://188.166.144.172:4000/leads/' + id, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json()
+        let newClient = data.client
+        setClient(newClient);
 
+        setClientNif(data.client.nif);
+        setClientName(data.client.name);
+
+    }
     const getDepartments = async () => {
-        const response = await fetch('http://localhost:3000/departments');
+        const response = await fetch('http://188.166.144.172:4000/departments');
         const data = await response.json();
 
         if (data.length < 1) {
@@ -52,46 +69,14 @@ const NewBriefing = () => {
         }
     }
 
-    const getClients = async () => {
-        const response = await fetch('http://localhost:3000/client', {
-            method: 'GET', headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const json = await response.json();
-        setClients(json);
-    };
-    const getLatestId = async () => {
-        const response = await fetch('http://localhost:3000/lastDealId', {
-            method: 'GET', headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        let id = 1;
-        if (response.status === 200) {
-            id = await response.json();
-        }
-        const date = new Date()
-        const month = date.getMonth() + 1
-        const year = date.getFullYear()
-        const year_lastTwoDigits = year.toString().substr(-2)
-        let month_twoDigits;
-        if (month < 10) {
-            month_twoDigits = '0' + month
-        } else {
-            month_twoDigits = month
-        }
-        setBriefingID("BLISQ" + year_lastTwoDigits + month_twoDigits + id)
-    };
 
     const submitDeal = async () => {
-        const response = await fetch('http://localhost:3000/deal', {
+        const response = await fetch('http://188.166.144.172:4000/deal', {
             method: 'POST', headers: {
                 'Content-Type': 'application/json'
             }, body: JSON.stringify({
                 inner_id: briefingID,
-                clientId: clientNif,
+                client: client,
                 timings: timings,
                 clientStatus: clientStatus,
                 work: work,
@@ -114,20 +99,15 @@ const NewBriefing = () => {
             <h1 className="text-center text-2xl">Novo Briefing</h1>
             <div className="flex justify-between">
                 <label>Referência da Proposta:
-                    <input className="ml-2" readOnly value={briefingID}/>
+                    <input className="ml-1" readOnly value={briefingID}/>
                 </label>
 
-                <label>Cliente
-                    <select name="client" className="mt-4 ml-2" onChange={handleClient} defaultValue="DEFAULT">
-                        <option value="DEFAULT" disabled>Escolher Cliente</option>
-
-                        {clients.length > 0 && clients.map(client => (
-                            <option key={client.id} value={client.nif}>{client.name}</option>))}
-                    </select>
+                <label>Cliente:
+                    <input className="ml-1" readOnly value={clientName}/>
                 </label>
 
                 <label>NIF do Cliente:
-                    <input className="ml-2" readOnly value={clientNif}/>
+                    <input className="ml-1" readOnly value={clientNif}/>
                 </label>
             </div>
 

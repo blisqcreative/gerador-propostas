@@ -11,7 +11,9 @@ const ListDeals = () => {
     const [deals, setDeals] = useState([]);
 
     const getDeals = async () => {
-        const response = await fetch('http://localhost:3000/deal');
+        let id = JSON.parse(localStorage.getItem('session')).department;
+        const response = await fetch('http://188.166.144.172:4000/deals/department/'+id);
+
         const data = await response.json();
 
         if (data.length < 1) {
@@ -37,8 +39,8 @@ const ListDeals = () => {
                 <p className="font-bold text-lg">Data de Criação</p>
 
             </div>
-            {deals.map(deal => (
-                <div className="container justify-center grid grid-cols-5 mx-auto" onClick={() => navigate(`/deals/${deal.id}`)}>
+            {deals.map((deal, index) => (
+                <div key={index} className="container justify-center grid grid-cols-5 mx-auto" onClick={() => navigate(`/deals/${deal.id}`)}>
                     <p>{deal.inner_id}</p>
                     <p>{deal.client.name}</p>
                     <p>{deal.status}</p>
