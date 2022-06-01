@@ -5,9 +5,6 @@ import {Department} from "./Department"
 
 @Entity()
 export class DealToDepartment extends BaseEntity{
-    @PrimaryGeneratedColumn()
-    dealToDepartmentId: number
-
     @Column()
     status: boolean
 
@@ -16,6 +13,4 @@ export class DealToDepartment extends BaseEntity{
 
     @ManyToOne(() => Deal, deal => deal.dealToDepartments, {nullable: true, primary: true})
     deal: Deal;
-
-
 }

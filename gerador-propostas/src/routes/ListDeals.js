@@ -47,8 +47,8 @@ const ListDeals = () => {
                     <p>{deal.client.name}</p>
                     <p>{deal.status}</p>
                     <div className="flex gap-2">
-                        {deal.dealToDepartments.map((department, index) => (
-                            <p className={department.status == false ? "text-red-500" : "text-green-500"} key={index}>{department.department.initials}</p>
+                        {deal.departments.map((department, index) => (
+                            <p className={department.status === false ? "text-red-500" : "text-green-500"} key={index}>{department.initials}</p>
                         ))}
                     </div>
                     <p>{moment(deal.date).locale("pt").format("LLLL")}</p>

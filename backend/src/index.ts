@@ -197,7 +197,24 @@ declare module 'express-session' {
     app.get("/deals/department/:id", async (req, res) => {
         const {id} = req.params;
         const deals = await Deal.getDealByDepartmentId(parseInt(id));
-        res.json(deals);
+
+        const dealsFormatted = deals.map(deal => ({
+            id: deal.id,
+            client: deal.client,
+            clientStatus: deal.clientStatus,
+            status: deal.status,
+            inner_id: deal.inner_id,
+            work: deal.work,
+            timings: deal.timings,
+            departments: deal.dealToDepartments.map(({status, department}) => ({
+                status,
+                id: department.id,
+                name: department.name,
+                initials: department.initials
+            })),
+        }))
+
+        res.json(dealsFormatted);
     });
 
     app.post("/updatedLead", async (req, res) => {

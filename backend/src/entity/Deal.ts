@@ -77,10 +77,9 @@ export class Deal extends BaseEntity {
             .leftJoin("deal.dealToDepartments", "departmentSelect")
             .leftJoinAndSelect("deal.dealToDepartments", "department")
             .leftJoinAndSelect("department.department", "department1")
-            .where("departmentSelect.department.id = :id", {id})
             .leftJoinAndSelect("deal.client", "client")
+            .where("departmentSelect.department.id = :id", {id})
             .getMany();
-
     }
 
     //get deals with departments and its status

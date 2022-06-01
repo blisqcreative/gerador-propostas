@@ -14,7 +14,6 @@ const AddTaskToDeal = () => {
         const response = await fetch(`${server}/deal/${params.id}`);
         const data = await response.json();
         setDeal(data);
-        console.log(data);
     }
 
     const getProductsByDepartment = async (department) => {
