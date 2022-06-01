@@ -1,8 +1,9 @@
 import {BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm"
 import {User} from "./User"
 import {Deal} from "./Deal"
-import {TaskToDeal} from "./TaskToDeal"
+import {ProductToDeal} from "./ProductToDeal"
 import {Product} from "./Product"
+import {DealToDepartment} from "./DealToDepartment"
 
 @Entity()
 export class Department extends BaseEntity {
@@ -19,9 +20,10 @@ export class Department extends BaseEntity {
     @OneToMany(type => User, user => user.department)
     users: User[]
 
-    @ManyToMany(() => Deal, deal => deal.departments)
-    deals: Deal[];
 
     @OneToMany(type => Product, product => product.department)
     products: Product[];
+
+    @OneToMany(() => DealToDepartment, dealToDepartment => dealToDepartment.department, {nullable: true})
+    dealToDepartments: DealToDepartment[];
 }

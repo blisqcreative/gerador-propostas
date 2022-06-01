@@ -1,15 +1,15 @@
 import {useEffect, useState} from "react"
 import {Link} from "react-router-dom"
+import {server} from "../utils/server"
 
 function Home() {
-    const [services, setServices] = useState([])
     const [serviceId, setServiceId] = useState(0)
     const [taskName, setTaskName] = useState('')
     const [taskDescription, setTaskDescription] = useState('')
     const [nextLeadID, setNextLeadID] = useState("")
 
     const getLatestId = async () => {
-        const response = await fetch('http://188.166.144.172:4000/lastLeadId', {
+        const response = await fetch(`${server}/lastLeadId`, {
             method: 'GET', headers: {
                 'Content-Type': 'application/json'
             }
@@ -33,17 +33,6 @@ function Home() {
 
 
     useEffect(() => {
-        ;(async () => {
-            try {
-                const res = await fetch('http://188.166.144.172:4000/services', {
-                    method: 'GET',
-                })
-                const json = await res.json()
-                setServices(json)
-            } catch (e) {
-                console.error(e)
-            }
-        })();
         getLatestId();
     }, [])
 
@@ -57,7 +46,7 @@ function Home() {
         setTaskDescription(event.target.value)
     }
     const addTask = async (id, taskName, taskDesc) => {
-        const res = await fetch('http://188.166.144.172:4000/task/', {
+        const res = await fetch(`${server}/task/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

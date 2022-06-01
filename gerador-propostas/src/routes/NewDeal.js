@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react"
 import {TaskCheckBox} from "../components/TaskCheckBox"
+import {server} from "../utils/server"
 
 function NewDeal() {
     const [types, setTypes] = useState([]);
@@ -20,7 +21,7 @@ function NewDeal() {
         await getClients();
     }, []);
     const getTypes = async () => {
-        const response = await fetch('http://188.166.144.172:4000/types', {
+        const response = await fetch(`${server}/types`, {
             method: 'GET', headers: {
                 'Content-Type': 'application/json'
             }
@@ -29,7 +30,7 @@ function NewDeal() {
         setTypes(json);
     };
     const getClients = async () => {
-        const response = await fetch('http://188.166.144.172:4000/client', {
+        const response = await fetch(`${server}/client`, {
             method: 'GET', headers: {
                 'Content-Type': 'application/json'
             }
@@ -38,7 +39,7 @@ function NewDeal() {
         setClients(json);
     };
     const getServices = async () => {
-        const response = await fetch('http://188.166.144.172:4000/services', {
+        const response = await fetch(`${server}/services`, {
             method: 'GET', headers: {
                 'Content-Type': 'application/json'
             }
@@ -47,7 +48,7 @@ function NewDeal() {
         setServices(json);
     };
     const getTasks = async () => {
-        const response = await fetch('http://188.166.144.172:4000/tasks', {
+        const response = await fetch(`${server}/tasks`, {
             method: 'GET', headers: {
                 'Content-Type': 'application/json'
             }
@@ -85,7 +86,7 @@ function NewDeal() {
             clientId: selectedClient,
             tasksId: idTasks
         };
-        fetch('http://188.166.144.172:4000/deal', {
+        fetch(`${server}/deal`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -1,22 +1,38 @@
 import "reflect-metadata";
 import {createConnection} from "typeorm";
-
-const cors = require("cors");
 import express from "express";
 import bcrypt from "bcrypt";
 import {User} from "./entity/User";
-import {Task} from "./entity/Task";
-import {Service} from "./entity/Service"
 import {Client} from "./entity/Client"
 import {Deal} from "./entity/Deal"
-import {TaskToDeal} from "./entity/TaskToDeal"
 import {Department} from "./entity/Department"
+import {Lead} from "./entity/Lead";
+import {Product} from "./entity/Product";
+import {ProductToDeal} from "./entity/ProductToDeal";
+import {DealToDepartment} from "./entity/DealToDepartment"
+
+const cors = require("cors");
+require('dotenv').config();
+const axios = require('axios').default;
+var session = require('express-session')
+
+declare module 'express-session' {
+    export interface SessionData {
+        user: { [key: string]: any };
+    }
+}
 
 
 (async () => {
     const app = express();
+    app.use(session({secret: 'keyboard cat', cookie: {maxAge: 60000}}))
     app.use(express.json());
-    app.use(cors());
+    app.use(cors({origin: 'http://localhost:3000', credentials: true,}));
+    app.use(function (req, res, next) {
+        res.setHeader('Acess-Control-Allow-Credentials', 'true');
+        next();
+    })
+
 
     await createConnection()
 
@@ -34,15 +50,22 @@ import {Department} from "./entity/Department"
 
         let new_password = await bcrypt.hash(password, 10);
 
-        const user = await User.create({firstName, lastName, email, password: new_password, department: newDepartment}).save();
+        const user = await User.create({
+            firstName,
+            lastName,
+            email,
+            password: new_password,
+            department: newDepartment
+        }).save();
 
         res.status(201).send("User created with id: " + user.id);
 
 
     });
     app.post("/login", async (req, res) => {
+
         const {email, password} = req.body;
-        const user = await User.findOne({where: {email}});
+        const user = await User.getUserWithDepartmentByEmail(email);
 
         if (!user) {
             return res.status(404).send("User not found");
@@ -54,39 +77,17 @@ import {Department} from "./entity/Department"
             return res.status(401).send("Invalid password");
         }
 
-        res.status(200).send("Logged in");
-    });
-
-    app.get("/tasks", async (req, res) => {
-        const tasks = await Task.find();
-        res.json(tasks);
-    });
-
-    app.post("/task", async (req, res) => {
-        const {title, description, serviceId} = req.body;
-
-
-        const service = await Service.findOne({where: {id: serviceId}});
-        if (!service) {
-            return res.status(400).send("Service not found");
+        req.session.user = {
+            id: user.id,
+            department: user.department.id
         }
-        const task = await Task.create({title, description, service}).save();
-        res.status(201).send("Task created with id: " + task.id);
-    });
-    app.get("/services", async (req, res) => {
-        const services = await Service.find();
-        res.json(services);
-    });
 
-    app.post("/service", async (req, res) => {
-        const {name} = req.body;
-        const service = await Service.create({name}).save();
-        res.status(201).send("Service created with id: " + service.id);
+        res.json(req.session.user);
     });
 
 
     app.post("/client", async (req, res) => {
-        const {name, person, email, phone, address, city, state, zip, nif} = req.body;
+        const {name, person, email, phone, address, city, state, zip, nif, idCRM} = req.body;
 
         const clientExists = await Client.findOne({where: {nif}});
         if (clientExists) {
@@ -100,11 +101,11 @@ import {Department} from "./entity/Department"
         const clients = await Client.find();
         res.json(clients);
     });
-    app.get("/client/:nif", async (req, res) => {
-        const {nif} = req.params;
-        const client = await Client.findOne({where: {nif}});
+    app.get("/client/:idCRM", async (req, res) => {
+        const {idCRM} = req.params;
+        const client = await Client.findOne({where: {idCRM}});
         if (!client) {
-            return res.status(400).send("Client not found");
+            return res.status(404).send("Client not found");
         }
         res.json(client);
     });
@@ -115,7 +116,6 @@ import {Department} from "./entity/Department"
     app.get("/deal/:id", async (req, res) => {
         const {id} = req.params;
         const deal = await Deal.getDealWithDepartmentById(parseInt(id));
-        console.log(deal);
         if (!deal) {
             return res.status(404).send("Deal not found");
         }
@@ -123,13 +123,10 @@ import {Department} from "./entity/Department"
     });
 
     app.post("/deal", async (req, res) => {
-        const {clientId, departmentsId, clientStatus, inner_id, status, work, timings} = req.body;
+        const {client, departmentsId, clientStatus, inner_id, status, work, timings} = req.body;
         const date = new Date();
 
-        const client = await Client.findOne({where: {nif: clientId}});
-        if (!client) {
-            return res.status(400).send("Client not found");
-        }
+
         const user = await User.findOne();
         const departments = [];
 
@@ -141,25 +138,42 @@ import {Department} from "./entity/Department"
             departments.push(department);
         }
 
-        const deal = await Deal.create({client, user, date, clientStatus, status, inner_id, work, timings, departments}).save();
+        const deal = await Deal.create({
+            client,
+            user,
+            date,
+            clientStatus,
+            status,
+            inner_id,
+            work,
+            timings,
+        }).save();
+
+        let promisses = departments.map(department => DealToDepartment.create({
+                status: false,
+                deal,
+                department
+            }).save()
+        );
+        await Promise.all(promisses);
 
 
-        if(deal){
+        if (deal) {
             res.status(201).send("Deal created with id: " + deal.id);
-        }else{
+        } else {
             res.status(400).send("Error creating deal");
         }
     });
-    app.get("/lastDealId", async (req, res) => {
-        const deal = await Deal.findOne({
+    app.get("/lastLeadId", async (req, res) => {
+        const lead = await Lead.findOne({
             order: {
                 id: "DESC"
             }
         });
-        if(!deal) {
-            return res.status(404).send("Deal not found");
+        if (!lead) {
+            return res.status(404).send("Lead not found");
         }
-        res.json(deal.id);
+        res.json(lead.id);
     });
 
     app.get("/departments", async (req, res) => {
@@ -167,12 +181,184 @@ import {Department} from "./entity/Department"
         res.json(departments);
     });
 
+    app.get("/leads", async (req, res) => {
+        const leads = await Lead.getLeadsWithClient();
+        res.json(leads);
+    });
+
+    app.get("/leads/:id", async (req, res) => {
+        const {id} = req.params;
+        const lead = await Lead.getLeadWithClientById(id);
+        if (!lead) {
+            return res.status(404).send("Lead not found");
+        }
+        res.json(lead);
+    });
+    app.get("/deals/department/:id", async (req, res) => {
+        const {id} = req.params;
+        const deals = await Deal.getDealByDepartmentId(parseInt(id));
+        res.json(deals);
+    });
+
+    app.post("/updatedLead", async (req, res) => {
+        console.log("Nova lead atualizada");
+        console.log(req.body);
+        res.send("recebi webhook");
+
+        const lead = await Lead.findOne({where: {crmId: req.body.id}});
+        if (!lead) {
+            return res.status(404).send("Lead not found");
+        }
+        if (req.body.client) {
+            let client = await Client.findOne({where: {idCRM: req.body.company.id}});
+            let body = req.body;
+            const idCompany = body.company ? body.company.id : null;
+            let newClient;
+            if (!client) {
+                newClient = await axios.get(`https://blisq.teamwork.com/crm/api/v2/companies/${idCompany}.json`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + process.env.TOKEN_TW
+                    },
+                });
+                if (newClient.status === 200) {
+
+                    client = await Client.create({
+                        name: newClient.data.company.name,
+                        person: "",
+                        email: newClient.data.company.emailAddresses[0].address ? newClient.data.company.emailAddresses[0].address : "Sem email associado",
+                        phone: "",
+                        address: newClient.data.company.addressLine1 ? newClient.data.company.addressLine1 : "Sem morada",
+                        city: newClient.data.company.city ? newClient.data.company.city : "Sem cidade",
+                        state: newClient.data.company.stateOrCounty ? newClient.data.company.stateOrCounty : "Sem distrito",
+                        zip: newClient.data.company.zipcode ? newClient.data.company.zipcode : "Sem código postal",
+                        nif: 111111111,
+                        idCRM: newClient.data.company.id
+                    }).save();
+                }
+
+            }
+            lead.client = client;
+            let newLead = await lead.save();
+            console.log("Lead updated with id: " + newLead.id);
+            return res.status(200).send("Lead updated");
+        }
+    });
+
     app.post("/testWebhook", async (req, res) => {
+        console.log("Nova Lead Recebida")
         const body = req.body;
-        console.log(body);
+        const idCompany = body.company ? body.company.id : null;
+        let client;
+        if (idCompany) {
+            client = await Client.findOne({where: {idCRM: body.company.id}});
+            let newClient;
+            if (!client) {
+                newClient = await axios.get(`https://blisq.teamwork.com/crm/api/v2/companies/${idCompany}.json`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + process.env.TOKEN_TW
+                    },
+                });
+                if (newClient.status === 200) {
+
+                    client = await Client.create({
+                        name: newClient.data.company.name,
+                        person: "",
+                        email: newClient.data.company.emailAddresses[0].address ? newClient.data.company.emailAddresses[0].address : "Sem email associado",
+                        phone: "",
+                        address: newClient.data.company.addressLine1 ? newClient.data.company.addressLine1 : "Sem morada",
+                        city: newClient.data.company.city ? newClient.data.company.city : "Sem cidade",
+                        state: newClient.data.company.stateOrCounty ? newClient.data.company.stateOrCounty : "Sem distrito",
+                        zip: newClient.data.company.zipcode ? newClient.data.company.zipcode : "Sem código postal",
+                        nif: 111111111,
+                        idCRM: newClient.data.company.id
+                    }).save();
+                }
+
+            }
+        } else {
+            client = null
+        }
+        const deal = await Lead.findOne({
+            order: {
+                id: "DESC"
+            }
+        });
+        let id = 1;
+        if (deal) {
+            id = deal.id
+        }
+        const date = new Date()
+        const month = date.getMonth() + 1
+        const year = date.getFullYear()
+        const year_lastTwoDigits = year.toString().substr(-2)
+        let month_twoDigits;
+        if (month < 10) {
+            month_twoDigits = '0' + month
+        } else {
+            month_twoDigits = month
+        }
+        const lead = await Lead.create({
+            inner_id: "BLISQ" + year_lastTwoDigits + month_twoDigits + id,
+            name: body.title,
+            date: date,
+            client: client,
+            crmId: body.id,
+        }).save();
+
+        if (lead) {
+            res.status(201).send("Lead created with id: " + lead.id);
+        } else {
+            res.status(400).send("Error creating lead");
+        }
+
+
+    });
+
+    app.post("/deal/task/:id", async (req, res) => {
+        const body = req.body;
+        const id = req.params.id;
+        const deal = await Deal.findOne({where: {id}});
+
+        if (!deal) {
+            res.status(400).send("Deal not found");
+        }
+
+
+        let promisses = body.map(product => ProductToDeal.create({
+                dealId: parseInt(id),
+                productId: parseInt(product.id),
+                hours: product.hours,
+                description: product.description,
+
+            }).save()
+        );
+        await Promise.all(promisses)
+
+        res.status(200).send("Tasks added to deal");
+
+
+    })
+
+
+    app.get("/products/department/:id", async (req, res) => {
+        const {id} = req.params;
+        const products = await Product.getProductsByDepartment(parseInt(id));
+        if (!products) {
+            return res.status(404).send("Products not found");
+        }
+        res.json(products);
     });
 
 
-    app.listen(3000, () => console.log('server running on port 3000'))
+    app.get("/hello", async (req, res) => {
+        res.send("Hello World");
+
+    });
+
+    app.listen(4000, () => console.log('server running on port 4000'))
 
 })()

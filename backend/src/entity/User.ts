@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany, BaseEntity, ManyToOne} from "typeorm";
+import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {Deal} from "./Deal"
 import {Department} from "./Department"
 
@@ -25,5 +25,12 @@ export class User extends BaseEntity {
 
     @ManyToOne(type => Department, department => department.users)
     department: Department;
+
+    static async getUserWithDepartmentByEmail(email: string) {
+        return await User.createQueryBuilder("user")
+            .leftJoinAndSelect("user.department", "department")
+            .where("user.email = :email", {email})
+            .getOne();
+    }
 
 }

@@ -1,59 +1,47 @@
 import {useRef, useState} from "react"
 
 
-export const TaskCheckBox = (task) => {
-    const [checked, setChecked] = useState(false);
-    const [hours, setHours] = useState(0);
-    const [costPrice, setCostPrice] = useState(0);
-    const [sellPrice, setSellPrice] = useState(0);
-    const refInput = useRef(null);
+export const TaskCheckBox = ({product, handleCheck, handleStateChange, setHoursDiffState}) => {
 
-    const handleChange = (e) => {
-        setChecked(e.target.checked);
-    }
-    const handleHours = (e) => {
-        setHours(e.target.value);
-    }
-    const handleCostPrice = (e) => {
-        setCostPrice(e.target.value);
-    }
-    const handleSellPrice = (e) => {
-        setSellPrice(e.target.value);
-    }
+
     const increment = () => {
-        refInput.current.value = parseInt(refInput.current.value) + 1;
+        setHoursDiffState(1)
     }
     const decrement = () => {
-        refInput.current.value = parseInt(refInput.current.value) - 1;
+        setHoursDiffState(-1)
     }
 
     return (
         <div>
             <label>
-                <input type="checkbox" className="mr-2" value={task.title}
-                       onChange={(e) => handleChange(e)}/>
-                {task.title}
+                <input type="checkbox" className="mr-2" checked={product.state.checked}
+                       onChange={handleCheck}/>
+                {product.data.name}
             </label>
-            {checked &&
+            {product.state.checked &&
                 <div className="flex gap-2">
                     <div className="flex flex-row h-10 rounded-lg relative bg-transparent mt-1 items-center">
+                        <textarea className="w-full h-full p-2 text-gray-700 outline-none resize-none border-2 border-gray-400"
+                                  placeholder="Descrição da tarefa"
+                                  cols="30" rows="10"
+                                  defaultValue={product.state.description}
+                                  onChange={(e) => handleStateChange("description", e.target.value)}
+                                  />
                         <label className="text-lg">Horas:</label>
                             <button onClick={decrement}
                                 className=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none">
                             <span className="m-auto text-2xl font-thin">−</span>
                         </button>
 
-                        <input type="number" ref={refInput}
+                        <input type="number"
                                className="h-full outline-none focus:outline-none text-center bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none"
-                               name="custom-input-number" defaultValue={0} onChange={handleHours}/>
+                               name="custom-input-number" value={product.state.hours} onChange={(e) => handleStateChange("hours", e.target.value)}/>
 
                         <button onClick={increment}
                                 className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer">
                             <span className="m-auto text-2xl font-thin">+</span>
                         </button>
                     </div>
-                    <label className="mr-2 flex">Preço Custo: <input placeholder="0.00" className="py-2 px-2 h-full w-min outline-none focus:outline-none bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none" onChange={handleCostPrice} type="text"/></label>
-                    <label className="mr-2 flex">Preço Venda: <input placeholder="0.00" className="py-2 px-2 h-full w-min outline-none focus:outline-none bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none" onChange={handleSellPrice} type="text"/></label>
                 </div>}
         </div>
     )

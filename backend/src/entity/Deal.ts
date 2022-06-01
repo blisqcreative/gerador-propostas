@@ -11,11 +11,12 @@ import {
 } from "typeorm"
 import {Client} from "./Client"
 import {User} from "./User"
-import {TaskToDeal} from "./TaskToDeal"
+import {ProductToDeal} from "./ProductToDeal"
 import {Department} from "./Department"
+import {DealToDepartment} from "./DealToDepartment"
 
 @Entity()
-export class Deal extends BaseEntity{
+export class Deal extends BaseEntity {
 
     @PrimaryGeneratedColumn()
     id: number
@@ -38,7 +39,7 @@ export class Deal extends BaseEntity{
     @Column()
     work: string
 
-    @Column("int", { nullable: true })
+    @Column("int", {nullable: true})
     clientId: number;
 
     @JoinColumn({name: "clientId"})
@@ -48,12 +49,11 @@ export class Deal extends BaseEntity{
     @ManyToOne(type => User, user => user.deals)
     user: User
 
-    @OneToMany(() => TaskToDeal, taskToDeal => taskToDeal.deal, {nullable: true})
-    taskToDeals: TaskToDeal[];
+    @OneToMany(() => ProductToDeal, productToDeal => productToDeal.deal, {nullable: true})
+    productToDeals: ProductToDeal[];
 
-    @ManyToMany(() => Department, department => department.deals)
-    @JoinTable()
-    departments: Department[];
+    @OneToMany(() => DealToDepartment, dealToDepartment => dealToDepartment.deal, {nullable: true})
+    dealToDepartments: DealToDepartment[];
 
 
     static async getDealWithDepartments() {
@@ -62,11 +62,33 @@ export class Deal extends BaseEntity{
             .leftJoinAndSelect("deal.client", "client")
             .getMany();
     }
+
     static async getDealWithDepartmentById(id: number) {
         return await Deal.createQueryBuilder("deal")
-            .leftJoinAndSelect("deal.departments", "departments")
+            .leftJoin("deal.dealToDepartments", "departmentSelect")
+            .leftJoinAndSelect("deal.dealToDepartments", "department")
             .leftJoinAndSelect("deal.client", "client")
             .where("deal.id = :id", {id})
             .getOne();
+    }
+
+    static async getDealByDepartmentId(id: number) {
+        return await Deal.createQueryBuilder("deal")
+            .leftJoin("deal.dealToDepartments", "departmentSelect")
+            .leftJoinAndSelect("deal.dealToDepartments", "department")
+            .leftJoinAndSelect("department.department", "department1")
+            .where("departmentSelect.department.id = :id", {id})
+            .leftJoinAndSelect("deal.client", "client")
+            .getMany();
+
+    }
+
+    //get deals with departments and its status
+    static async getDealWithDepartmentStatus() {
+        return await Deal.createQueryBuilder("deal")
+            .innerJoin("deal.departments", "department")
+            .innerJoinAndSelect("department.status", "status")
+            .leftJoinAndSelect("deal.client", "client")
+            .getMany();
     }
 }

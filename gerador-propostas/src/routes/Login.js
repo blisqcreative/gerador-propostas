@@ -1,6 +1,7 @@
 import {useState} from "react"
 import {Redirect} from "react-router-dom"
 import { useNavigate } from 'react-router-dom';
+import {server} from "../utils/server"
 function Login() {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
@@ -12,7 +13,7 @@ function Login() {
     const handleLogin = async () => {
         setError(false);
 
-        const res = await fetch('http://188.166.144.172:4000/login', {
+        const res = await fetch(`${server}/login`, {
             credentials: 'include',
             method: 'POST',
             headers: {

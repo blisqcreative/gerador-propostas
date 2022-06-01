@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react"
 import {useLocation, useNavigate, useParams} from "react-router-dom"
+import {server} from "../utils/server"
 
 const NewBriefing = () => {
 
@@ -45,7 +46,7 @@ const NewBriefing = () => {
         setTimings(e.target.value);
     }
     const getLead = async (id) => {
-        const response = await fetch('http://188.166.144.172:4000/leads/' + id, {
+        const response = await fetch(`${server}/leads/` + id, {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -59,7 +60,7 @@ const NewBriefing = () => {
 
     }
     const getDepartments = async () => {
-        const response = await fetch('http://188.166.144.172:4000/departments');
+        const response = await fetch(`${server}/departments`);
         const data = await response.json();
 
         if (data.length < 1) {
@@ -71,7 +72,7 @@ const NewBriefing = () => {
 
 
     const submitDeal = async () => {
-        const response = await fetch('http://188.166.144.172:4000/deal', {
+        const response = await fetch(`${server}/deal`, {
             method: 'POST', headers: {
                 'Content-Type': 'application/json'
             }, body: JSON.stringify({

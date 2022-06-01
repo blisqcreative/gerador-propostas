@@ -1,10 +1,14 @@
 import {BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm"
 import {Deal} from "./Deal"
+import {Lead} from "./Lead";
 
 @Entity()
 export class Client extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
+
+    @Column()
+    idCRM: number;
 
     @Column()
     name: string
@@ -35,5 +39,8 @@ export class Client extends BaseEntity {
 
     @OneToMany(type => Deal, deal => deal.client)
     deals: Deal[]
+
+    @OneToMany(type => Lead, lead => lead.client)
+    leads: Lead[]
 
 }

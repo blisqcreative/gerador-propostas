@@ -2,6 +2,7 @@ import {useEffect, useState} from "react"
 import moment from "moment"
 import 'moment/locale/pt'
 import {useNavigate} from "react-router-dom"
+import {server} from "../utils/server"
 
 
 
@@ -12,9 +13,10 @@ const ListDeals = () => {
 
     const getDeals = async () => {
         let id = JSON.parse(localStorage.getItem('session')).department;
-        const response = await fetch('http://188.166.144.172:4000/deals/department/'+id);
+        const response = await fetch(`${server}/deals/department/`+id);
 
         const data = await response.json();
+        console.log(data);
 
         if (data.length < 1) {
             alert('Não existem deals registados');
@@ -45,8 +47,8 @@ const ListDeals = () => {
                     <p>{deal.client.name}</p>
                     <p>{deal.status}</p>
                     <div className="flex gap-2">
-                        {deal.departments.map((department, index) => (
-                            <p key={index}>{department.initials}</p>
+                        {deal.dealToDepartments.map((department, index) => (
+                            <p className={department.status == false ? "text-red-500" : "text-green-500"} key={index}>{department.department.initials}</p>
                         ))}
                     </div>
                     <p>{moment(deal.date).locale("pt").format("LLLL")}</p>

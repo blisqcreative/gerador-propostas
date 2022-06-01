@@ -1,5 +1,6 @@
 import {useState} from "react"
 import {useNavigate} from "react-router-dom"
+import {server} from "../utils/server"
 
 export const NewClient = () => {
     const navigate = useNavigate();
@@ -18,7 +19,7 @@ export const NewClient = () => {
         setNifExists(false);
         setNif(e.target.value);
         if (nif.length === 8) {
-            const res = await fetch("http://188.166.144.172:4000/client/" + nif);
+            const res = await fetch(`${server}/client/` + nif);
 
             if (res.status !== 400) {
                 setNifExists(true);
@@ -40,7 +41,7 @@ export const NewClient = () => {
             state
         }
         let a = JSON.stringify(data);
-        const res = await fetch("http://188.166.144.172:4000/client",{
+        const res = await fetch(`${server}/client`,{
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

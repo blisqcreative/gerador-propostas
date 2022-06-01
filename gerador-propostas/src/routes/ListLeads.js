@@ -1,13 +1,14 @@
 import {useEffect, useState} from "react"
 import moment from "moment"
 import {Link} from "react-router-dom"
+import {server} from "../utils/server"
 
 export const ListLeads = () => {
 
 
     const [leads, setLeads] = useState([]);
     const getLeads = async () => {
-        const response = await fetch('http://188.166.144.172:4000/leads', {
+        const response = await fetch(`${server}/leads`, {
             method: 'GET', headers: {
                 'Content-Type': 'application/json'
             }
