@@ -256,6 +256,7 @@ declare module 'express-session' {
                 }
 
             }
+            console.log(client);
             lead.client = client;
             let newLead = await lead.save();
             console.log("Lead updated with id: " + newLead.id);
@@ -346,8 +347,6 @@ declare module 'express-session' {
 
 
         let promisses = body.map(product => ProductToDeal.create({
-                dealId: parseInt(id),
-                productId: parseInt(product.id),
                 hours: product.hours,
                 description: product.description,
 
@@ -363,11 +362,22 @@ declare module 'express-session' {
 
     app.get("/products/department/:id", async (req, res) => {
         const {id} = req.params;
-        const products = await Product.getProductsByDepartment(parseInt(id));
+        const products = await Product.getProductsInDealByDepartment(parseInt(id));
         if (!products) {
             return res.status(404).send("Products not found");
         }
-        res.json(products);
+        console.log(products);
+
+
+        const productsFormatted = products.map((product,index) => ({
+
+                id: product.id,
+                name: product.productname,
+                hours: product.is_selected ? product.product_hours : 0,
+                description: product.final_description,
+                checked: product.is_selected
+            }));
+        res.json(productsFormatted);
     });
 
 

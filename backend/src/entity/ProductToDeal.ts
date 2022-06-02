@@ -4,14 +4,6 @@ import {Product} from "./Product";
 
 @Entity()
 export class ProductToDeal extends BaseEntity{
-    @PrimaryGeneratedColumn()
-    productToDealId: number
-
-    @Column()
-    productId: number
-
-    @Column()
-    dealId: number
 
     @Column()
     hours: number
@@ -19,11 +11,9 @@ export class ProductToDeal extends BaseEntity{
     @Column()
     description: string
 
-    @ManyToOne(() => Product, product => product.productToDeals, {nullable: true})
+    @ManyToOne(() => Product, product => product.productToDeals, {nullable: true, primary: true})
     product: Product
 
-    @ManyToOne(() => Deal, deal => deal.productToDeals, {nullable: true})
+    @ManyToOne(() => Deal, deal => deal.productToDeals, {nullable: true, primary: true})
     deal: Deal;
-
-
 }

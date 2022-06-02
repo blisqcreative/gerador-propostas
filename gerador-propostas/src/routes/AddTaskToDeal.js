@@ -19,16 +19,17 @@ const AddTaskToDeal = () => {
     const getProductsByDepartment = async (department) => {
         const response = await fetch(`${server}/products/department/${department}`);
         const data = await response.json();
-
+        console.log(data);
         setProducts(data.map(product => ({
             state: {
                 id: product.id,
                 description: product.description,
-                hours: "0",
-                checked: false,
+                hours: product.hours.toString(),
+                checked: product.checked,
             },
             data: product
         })));
+
     }
 
 
@@ -128,14 +129,5 @@ const AddTaskToDeal = () => {
         </div>
     ) : (<p>Loading...</p>)
 }
-
-/*
-     {
-        task.id
-        task.description
-        task.hours
-        deal.id,
-
- */
 
 export default AddTaskToDeal;

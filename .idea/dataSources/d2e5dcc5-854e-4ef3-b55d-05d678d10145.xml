@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="blisq@188.166.144.172">
-  <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.40">
+  <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.39">
     <root id="1">
       <DateStyle>mdy</DateStyle>
-      <IntrospectionStateNumber>612</IntrospectionStateNumber>
+      <Grants>1||-9223372036854775808|c|G
+1||10|c|G
+1||10|C|G
+1||10|T|G
+13426||-9223372036854775808|c|G
+13426||10|c|G
+13426||10|C|G
+13426||10|T|G</Grants>
+      <IntrospectionStateNumber>621</IntrospectionStateNumber>
       <ServerVersion>12.11</ServerVersion>
       <StartupTime>1653902545</StartupTime>
       <TimeZones>true ACDT
@@ -1423,7 +1431,7 @@ true posixrules
 13127||10|C|G
 13127||-9223372036854775808|U|G
 13127||10|U|G</Grants>
-      <IntrospectionStateNumber>613</IntrospectionStateNumber>
+      <IntrospectionStateNumber>638</IntrospectionStateNumber>
       <ObjectId>16385</ObjectId>
       <Relations>sequence|table|16386|16388|1
 sequence|table|16433|16435|1
@@ -1431,8 +1439,6 @@ sequence|table|16445|16447|1
 sequence|table|16456|16458|1
 sequence|table|16467|16469|1
 sequence|table|16530|16532|1
-sequence|table|16549|16551|1
-sequence|table|16571|16573|1
 </Relations>
       <OwnerName>postgres</OwnerName>
     </database>
@@ -1441,41 +1447,13 @@ sequence|table|16571|16573|1
       <ObjectId>13427</ObjectId>
       <OwnerName>postgres</OwnerName>
     </database>
-    <role id="4" parent="1" name="blisq">
-      <CanLogin>1</CanLogin>
-      <CreateDb>1</CreateDb>
-      <CreateRole>1</CreateRole>
-      <ObjectId>16384</ObjectId>
-      <SuperRole>1</SuperRole>
-    </role>
-    <role id="5" parent="1" name="pg_execute_server_program">
-      <ObjectId>4571</ObjectId>
-    </role>
-    <role id="6" parent="1" name="pg_monitor">
-      <ObjectId>3373</ObjectId>
-      <RoleGrants>3374
-3375
-3377</RoleGrants>
-    </role>
-    <role id="7" parent="1" name="pg_read_all_settings">
-      <ObjectId>3374</ObjectId>
-    </role>
-    <role id="8" parent="1" name="pg_read_all_stats">
-      <ObjectId>3375</ObjectId>
-    </role>
-    <role id="9" parent="1" name="pg_read_server_files">
-      <ObjectId>4569</ObjectId>
-    </role>
-    <role id="10" parent="1" name="pg_signal_backend">
+    <role id="4" parent="1" name="pg_signal_backend">
       <ObjectId>4200</ObjectId>
     </role>
-    <role id="11" parent="1" name="pg_stat_scan_tables">
-      <ObjectId>3377</ObjectId>
+    <role id="5" parent="1" name="pg_read_server_files">
+      <ObjectId>4569</ObjectId>
     </role>
-    <role id="12" parent="1" name="pg_write_server_files">
-      <ObjectId>4570</ObjectId>
-    </role>
-    <role id="13" parent="1" name="postgres">
+    <role id="6" parent="1" name="postgres">
       <BypassRls>1</BypassRls>
       <CanLogin>1</CanLogin>
       <CreateDb>1</CreateDb>
@@ -1483,6 +1461,34 @@ sequence|table|16571|16573|1
       <ObjectId>10</ObjectId>
       <Replication>1</Replication>
       <SuperRole>1</SuperRole>
+    </role>
+    <role id="7" parent="1" name="pg_write_server_files">
+      <ObjectId>4570</ObjectId>
+    </role>
+    <role id="8" parent="1" name="pg_execute_server_program">
+      <ObjectId>4571</ObjectId>
+    </role>
+    <role id="9" parent="1" name="pg_read_all_stats">
+      <ObjectId>3375</ObjectId>
+    </role>
+    <role id="10" parent="1" name="pg_monitor">
+      <ObjectId>3373</ObjectId>
+      <RoleGrants>3374
+3375
+3377</RoleGrants>
+    </role>
+    <role id="11" parent="1" name="blisq">
+      <CanLogin>1</CanLogin>
+      <CreateDb>1</CreateDb>
+      <CreateRole>1</CreateRole>
+      <ObjectId>16384</ObjectId>
+      <SuperRole>1</SuperRole>
+    </role>
+    <role id="12" parent="1" name="pg_read_all_settings">
+      <ObjectId>3374</ObjectId>
+    </role>
+    <role id="13" parent="1" name="pg_stat_scan_tables">
+      <ObjectId>3377</ObjectId>
     </role>
     <tablespace id="14" parent="1" name="pg_default">
       <ObjectId>1663</ObjectId>
@@ -4658,7 +4664,7 @@ sequence|table|16571|16573|1
     <schema id="246" parent="2" name="public">
       <Comment>standard public schema</Comment>
       <Current>1</Current>
-      <IntrospectionStateNumber>613</IntrospectionStateNumber>
+      <IntrospectionStateNumber>638</IntrospectionStateNumber>
       <ObjectId>2200</ObjectId>
       <StateNumber>275</StateNumber>
       <OwnerName>postgres</OwnerName>
@@ -4675,91 +4681,79 @@ sequence|table|16571|16573|1
       <StateNumber>489</StateNumber>
       <OwnerName>blisq</OwnerName>
     </sequence>
-    <sequence id="249" parent="246" name="deal_to_department_dealToDepartmentId_seq">
-      <DataType>integer|0s</DataType>
-      <ObjectId>16571</ObjectId>
-      <StateNumber>539</StateNumber>
-      <OwnerName>blisq</OwnerName>
-    </sequence>
-    <sequence id="250" parent="246" name="department_id_seq">
+    <sequence id="249" parent="246" name="department_id_seq">
       <DataType>integer|0s</DataType>
       <ObjectId>16445</ObjectId>
       <StateNumber>489</StateNumber>
       <OwnerName>blisq</OwnerName>
     </sequence>
-    <sequence id="251" parent="246" name="lead_id_seq">
+    <sequence id="250" parent="246" name="lead_id_seq">
       <DataType>integer|0s</DataType>
       <ObjectId>16530</ObjectId>
       <StateNumber>490</StateNumber>
       <OwnerName>blisq</OwnerName>
     </sequence>
-    <sequence id="252" parent="246" name="product_id_seq">
+    <sequence id="251" parent="246" name="product_id_seq">
       <DataType>integer|0s</DataType>
       <ObjectId>16433</ObjectId>
       <StateNumber>489</StateNumber>
       <OwnerName>blisq</OwnerName>
     </sequence>
-    <sequence id="253" parent="246" name="product_to_deal_productToDealId_seq">
-      <DataType>integer|0s</DataType>
-      <ObjectId>16549</ObjectId>
-      <StateNumber>526</StateNumber>
-      <OwnerName>blisq</OwnerName>
-    </sequence>
-    <sequence id="254" parent="246" name="user_id_seq">
+    <sequence id="252" parent="246" name="user_id_seq">
       <DataType>integer|0s</DataType>
       <ObjectId>16467</ObjectId>
       <StateNumber>489</StateNumber>
       <OwnerName>blisq</OwnerName>
     </sequence>
-    <table id="255" parent="246" name="client">
+    <table id="253" parent="246" name="client">
       <ObjectId>16388</ObjectId>
       <StateNumber>491</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>blisq</OwnerName>
     </table>
-    <table id="256" parent="246" name="deal">
+    <table id="254" parent="246" name="deal">
       <ObjectId>16458</ObjectId>
       <StateNumber>489</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>blisq</OwnerName>
     </table>
-    <table id="257" parent="246" name="deal_to_department">
+    <table id="255" parent="246" name="deal_to_department">
       <ObjectId>16573</ObjectId>
       <StateNumber>531</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>blisq</OwnerName>
     </table>
-    <table id="258" parent="246" name="department">
+    <table id="256" parent="246" name="department">
       <ObjectId>16447</ObjectId>
       <StateNumber>489</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>blisq</OwnerName>
     </table>
-    <table id="259" parent="246" name="lead">
+    <table id="257" parent="246" name="lead">
       <ObjectId>16532</ObjectId>
       <StateNumber>518</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>blisq</OwnerName>
     </table>
-    <table id="260" parent="246" name="product">
+    <table id="258" parent="246" name="product">
       <ObjectId>16435</ObjectId>
       <StateNumber>489</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>blisq</OwnerName>
     </table>
-    <table id="261" parent="246" name="product_to_deal">
+    <table id="259" parent="246" name="product_to_deal">
       <ObjectId>16551</ObjectId>
       <StateNumber>526</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>blisq</OwnerName>
     </table>
-    <table id="262" parent="246" name="user">
+    <table id="260" parent="246" name="user">
       <ObjectId>16469</ObjectId>
       <StateNumber>489</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>blisq</OwnerName>
     </table>
-    <column id="263" parent="255" name="id">
+    <column id="261" parent="253" name="id">
       <DataType>integer|0s</DataType>
       <DefaultExpression>nextval(&apos;client_id_seq&apos;::regclass)</DefaultExpression>
       <NotNull>1</NotNull>
@@ -4767,77 +4761,77 @@ sequence|table|16571|16573|1
       <StateNumber>489</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="264" parent="255" name="name">
+    <column id="262" parent="253" name="name">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="265" parent="255" name="person">
+    <column id="263" parent="253" name="person">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="266" parent="255" name="email">
+    <column id="264" parent="253" name="email">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="267" parent="255" name="phone">
+    <column id="265" parent="253" name="phone">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="268" parent="255" name="address">
+    <column id="266" parent="253" name="address">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="269" parent="255" name="city">
+    <column id="267" parent="253" name="city">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="270" parent="255" name="state">
+    <column id="268" parent="253" name="state">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="271" parent="255" name="zip">
+    <column id="269" parent="253" name="zip">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="272" parent="255" name="nif">
+    <column id="270" parent="253" name="nif">
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <Position>10</Position>
       <StateNumber>489</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="273" parent="255" name="idCRM">
+    <column id="271" parent="253" name="idCRM">
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <Position>11</Position>
       <StateNumber>491</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <index id="274" parent="255" name="PK_96da49381769303a6515a8785c7">
+    <index id="272" parent="253" name="PK_96da49381769303a6515a8785c7">
       <ColNames>id</ColNames>
       <ObjectId>16395</ObjectId>
       <Primary>1</Primary>
@@ -4845,13 +4839,14 @@ sequence|table|16571|16573|1
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="275" parent="255" name="PK_96da49381769303a6515a8785c7">
+    <key id="273" parent="253" name="PK_96da49381769303a6515a8785c7">
+      <ColNames>id</ColNames>
       <ObjectId>16396</ObjectId>
       <Primary>1</Primary>
       <StateNumber>489</StateNumber>
       <UnderlyingIndexId>16395</UnderlyingIndexId>
     </key>
-    <column id="276" parent="256" name="id">
+    <column id="274" parent="254" name="id">
       <DataType>integer|0s</DataType>
       <DefaultExpression>nextval(&apos;deal_id_seq&apos;::regclass)</DefaultExpression>
       <NotNull>1</NotNull>
@@ -4859,60 +4854,60 @@ sequence|table|16571|16573|1
       <StateNumber>489</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="277" parent="256" name="inner_id">
+    <column id="275" parent="254" name="inner_id">
       <DataType>varchar|0s</DataType>
       <Position>2</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="278" parent="256" name="date">
+    <column id="276" parent="254" name="date">
       <DataType>timestamp|0s</DataType>
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1114</TypeId>
     </column>
-    <column id="279" parent="256" name="status">
+    <column id="277" parent="254" name="status">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="280" parent="256" name="clientStatus">
+    <column id="278" parent="254" name="clientStatus">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="281" parent="256" name="timings">
+    <column id="279" parent="254" name="timings">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="282" parent="256" name="work">
+    <column id="280" parent="254" name="work">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="283" parent="256" name="clientId">
+    <column id="281" parent="254" name="clientId">
       <DataType>integer|0s</DataType>
       <Position>8</Position>
       <StateNumber>489</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="284" parent="256" name="userId">
+    <column id="282" parent="254" name="userId">
       <DataType>integer|0s</DataType>
       <Position>9</Position>
       <StateNumber>489</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <foreign-key id="285" parent="256" name="FK_1ae3abc0ae1dcf6c13f49b62b56">
+    <foreign-key id="283" parent="254" name="FK_1ae3abc0ae1dcf6c13f49b62b56">
       <ColNames>clientId</ColNames>
       <ObjectId>16505</ObjectId>
       <RefColNames>id</RefColNames>
@@ -4922,7 +4917,7 @@ sequence|table|16571|16573|1
       <RefTableName>client</RefTableName>
       <RefTableKind>table</RefTableKind>
     </foreign-key>
-    <foreign-key id="286" parent="256" name="FK_4731e00e0d2378a614e4c2f549a">
+    <foreign-key id="284" parent="254" name="FK_4731e00e0d2378a614e4c2f549a">
       <ColNames>userId</ColNames>
       <ObjectId>16510</ObjectId>
       <RefColNames>id</RefColNames>
@@ -4932,7 +4927,7 @@ sequence|table|16571|16573|1
       <RefTableName>user</RefTableName>
       <RefTableKind>table</RefTableKind>
     </foreign-key>
-    <index id="287" parent="256" name="PK_9ce1c24acace60f6d7dc7a7189e">
+    <index id="285" parent="254" name="PK_9ce1c24acace60f6d7dc7a7189e">
       <ColNames>id</ColNames>
       <ObjectId>16465</ObjectId>
       <Primary>1</Primary>
@@ -4940,78 +4935,74 @@ sequence|table|16571|16573|1
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="288" parent="256" name="PK_9ce1c24acace60f6d7dc7a7189e">
+    <key id="286" parent="254" name="PK_9ce1c24acace60f6d7dc7a7189e">
+      <ColNames>id</ColNames>
       <ObjectId>16466</ObjectId>
       <Primary>1</Primary>
       <StateNumber>489</StateNumber>
       <UnderlyingIndexId>16465</UnderlyingIndexId>
     </key>
-    <column id="289" parent="257" name="dealToDepartmentId">
-      <DataType>integer|0s</DataType>
-      <DefaultExpression>nextval(&apos;&quot;deal_to_department_dealToDepartmentId_seq&quot;&apos;::regclass)</DefaultExpression>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-      <StateNumber>539</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="290" parent="257" name="status">
+    <column id="287" parent="255" name="status">
       <DataType>boolean|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StateNumber>531</StateNumber>
       <TypeId>16</TypeId>
     </column>
-    <column id="291" parent="257" name="departmentId">
+    <column id="288" parent="255" name="departmentId">
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StateNumber>589</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="292" parent="257" name="dealId">
+    <column id="289" parent="255" name="dealId">
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StateNumber>589</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <foreign-key id="293" parent="257" name="FK_d2aec246b7d5ce9cde82d3f67b7">
+    <foreign-key id="290" parent="255" name="FK_d2aec246b7d5ce9cde82d3f67b7">
       <ColNames>departmentId</ColNames>
       <ObjectId>16608</ObjectId>
       <RefColNames>id</RefColNames>
       <RefColPositions>1</RefColPositions>
+      <RefKeyName>PK_9a2213262c1593bffb581e382f5</RefKeyName>
       <StateNumber>589</StateNumber>
       <RefTableId>16447</RefTableId>
       <RefTableName>department</RefTableName>
       <RefTableKind>table</RefTableKind>
     </foreign-key>
-    <foreign-key id="294" parent="257" name="FK_28693b707833d22c0495aa4aff2">
+    <foreign-key id="291" parent="255" name="FK_28693b707833d22c0495aa4aff2">
       <ColNames>dealId</ColNames>
       <ObjectId>16613</ObjectId>
       <RefColNames>id</RefColNames>
       <RefColPositions>1</RefColPositions>
+      <RefKeyName>PK_9ce1c24acace60f6d7dc7a7189e</RefKeyName>
       <StateNumber>589</StateNumber>
       <RefTableId>16458</RefTableId>
       <RefTableName>deal</RefTableName>
       <RefTableKind>table</RefTableKind>
     </foreign-key>
-    <index id="295" parent="257" name="PK_08a25944b66321e786901ef3787">
-      <ColNames>dealToDepartmentId
-departmentId
+    <index id="292" parent="255" name="PK_3318a1e259377c0a5f9a19eb134">
+      <ColNames>departmentId
 dealId</ColNames>
-      <ObjectId>16606</ObjectId>
+      <ObjectId>16635</ObjectId>
       <Primary>1</Primary>
-      <StateNumber>589</StateNumber>
+      <StateNumber>620</StateNumber>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="296" parent="257" name="PK_08a25944b66321e786901ef3787">
-      <ObjectId>16607</ObjectId>
+    <key id="293" parent="255" name="PK_3318a1e259377c0a5f9a19eb134">
+      <ColNames>departmentId
+dealId</ColNames>
+      <ObjectId>16636</ObjectId>
       <Primary>1</Primary>
-      <StateNumber>589</StateNumber>
-      <UnderlyingIndexId>16606</UnderlyingIndexId>
+      <StateNumber>620</StateNumber>
+      <UnderlyingIndexId>16635</UnderlyingIndexId>
     </key>
-    <column id="297" parent="258" name="id">
+    <column id="294" parent="256" name="id">
       <DataType>integer|0s</DataType>
       <DefaultExpression>nextval(&apos;department_id_seq&apos;::regclass)</DefaultExpression>
       <NotNull>1</NotNull>
@@ -5019,21 +5010,21 @@ dealId</ColNames>
       <StateNumber>489</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="298" parent="258" name="name">
+    <column id="295" parent="256" name="name">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="299" parent="258" name="initials">
+    <column id="296" parent="256" name="initials">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <index id="300" parent="258" name="PK_9a2213262c1593bffb581e382f5">
+    <index id="297" parent="256" name="PK_9a2213262c1593bffb581e382f5">
       <ColNames>id</ColNames>
       <ObjectId>16454</ObjectId>
       <Primary>1</Primary>
@@ -5041,13 +5032,14 @@ dealId</ColNames>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="301" parent="258" name="PK_9a2213262c1593bffb581e382f5">
+    <key id="298" parent="256" name="PK_9a2213262c1593bffb581e382f5">
+      <ColNames>id</ColNames>
       <ObjectId>16455</ObjectId>
       <Primary>1</Primary>
       <StateNumber>489</StateNumber>
       <UnderlyingIndexId>16454</UnderlyingIndexId>
     </key>
-    <column id="302" parent="259" name="id">
+    <column id="299" parent="257" name="id">
       <DataType>integer|0s</DataType>
       <DefaultExpression>nextval(&apos;lead_id_seq&apos;::regclass)</DefaultExpression>
       <NotNull>1</NotNull>
@@ -5055,49 +5047,50 @@ dealId</ColNames>
       <StateNumber>490</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="303" parent="259" name="date">
+    <column id="300" parent="257" name="date">
       <DataType>timestamp|0s</DataType>
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StateNumber>490</StateNumber>
       <TypeId>1114</TypeId>
     </column>
-    <column id="304" parent="259" name="clientId">
+    <column id="301" parent="257" name="clientId">
       <DataType>integer|0s</DataType>
       <Position>4</Position>
       <StateNumber>490</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="305" parent="259" name="name">
+    <column id="302" parent="257" name="name">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StateNumber>491</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="306" parent="259" name="inner_id">
+    <column id="303" parent="257" name="inner_id">
       <DataType>varchar|0s</DataType>
       <Position>7</Position>
       <StateNumber>493</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="307" parent="259" name="crmId">
+    <column id="304" parent="257" name="crmId">
       <DataType>integer|0s</DataType>
       <Position>8</Position>
       <StateNumber>518</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <foreign-key id="308" parent="259" name="FK_0193b3b32dbe9a4168048e1033c">
+    <foreign-key id="305" parent="257" name="FK_0193b3b32dbe9a4168048e1033c">
       <ColNames>clientId</ColNames>
       <ObjectId>16541</ObjectId>
       <RefColNames>id</RefColNames>
       <RefColPositions>1</RefColPositions>
+      <RefKeyName>PK_96da49381769303a6515a8785c7</RefKeyName>
       <StateNumber>490</StateNumber>
       <RefTableId>16388</RefTableId>
       <RefTableName>client</RefTableName>
       <RefTableKind>table</RefTableKind>
     </foreign-key>
-    <index id="309" parent="259" name="PK_ca96c1888f7dcfccab72b72fffa">
+    <index id="306" parent="257" name="PK_ca96c1888f7dcfccab72b72fffa">
       <ColNames>id</ColNames>
       <ObjectId>16539</ObjectId>
       <Primary>1</Primary>
@@ -5105,13 +5098,14 @@ dealId</ColNames>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="310" parent="259" name="PK_ca96c1888f7dcfccab72b72fffa">
+    <key id="307" parent="257" name="PK_ca96c1888f7dcfccab72b72fffa">
+      <ColNames>id</ColNames>
       <ObjectId>16540</ObjectId>
       <Primary>1</Primary>
       <StateNumber>490</StateNumber>
       <UnderlyingIndexId>16539</UnderlyingIndexId>
     </key>
-    <column id="311" parent="260" name="id">
+    <column id="308" parent="258" name="id">
       <DataType>integer|0s</DataType>
       <DefaultExpression>nextval(&apos;product_id_seq&apos;::regclass)</DefaultExpression>
       <NotNull>1</NotNull>
@@ -5119,37 +5113,38 @@ dealId</ColNames>
       <StateNumber>489</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="312" parent="260" name="name">
+    <column id="309" parent="258" name="name">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="313" parent="260" name="description">
+    <column id="310" parent="258" name="description">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="314" parent="260" name="departmentId">
+    <column id="311" parent="258" name="departmentId">
       <DataType>integer|0s</DataType>
       <Position>6</Position>
       <StateNumber>489</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <foreign-key id="315" parent="260" name="FK_a35b7bec50d3f2d2a706d0462b2">
+    <foreign-key id="312" parent="258" name="FK_a35b7bec50d3f2d2a706d0462b2">
       <ColNames>departmentId</ColNames>
       <ObjectId>16500</ObjectId>
       <RefColNames>id</RefColNames>
       <RefColPositions>1</RefColPositions>
+      <RefKeyName>PK_9a2213262c1593bffb581e382f5</RefKeyName>
       <StateNumber>489</StateNumber>
       <RefTableId>16447</RefTableId>
       <RefTableName>department</RefTableName>
       <RefTableKind>table</RefTableKind>
     </foreign-key>
-    <index id="316" parent="260" name="PK_bebc9158e480b949565b4dc7a82">
+    <index id="313" parent="258" name="PK_bebc9158e480b949565b4dc7a82">
       <ColNames>id</ColNames>
       <ObjectId>16443</ObjectId>
       <Primary>1</Primary>
@@ -5157,83 +5152,81 @@ dealId</ColNames>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="317" parent="260" name="PK_bebc9158e480b949565b4dc7a82">
+    <key id="314" parent="258" name="PK_bebc9158e480b949565b4dc7a82">
+      <ColNames>id</ColNames>
       <ObjectId>16444</ObjectId>
       <Primary>1</Primary>
       <StateNumber>489</StateNumber>
       <UnderlyingIndexId>16443</UnderlyingIndexId>
     </key>
-    <column id="318" parent="261" name="productToDealId">
-      <DataType>integer|0s</DataType>
-      <DefaultExpression>nextval(&apos;&quot;product_to_deal_productToDealId_seq&quot;&apos;::regclass)</DefaultExpression>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-      <StateNumber>526</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="319" parent="261" name="productId">
+    <column id="315" parent="259" name="productId">
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StateNumber>526</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="320" parent="261" name="dealId">
+    <column id="316" parent="259" name="dealId">
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StateNumber>526</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="321" parent="261" name="hours">
+    <column id="317" parent="259" name="hours">
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StateNumber>526</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="322" parent="261" name="description">
+    <column id="318" parent="259" name="description">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StateNumber>526</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <foreign-key id="323" parent="261" name="FK_e864967da9480e562e1bfa6a084">
+    <foreign-key id="319" parent="259" name="FK_e864967da9480e562e1bfa6a084">
       <ColNames>productId</ColNames>
       <ObjectId>16560</ObjectId>
       <RefColNames>id</RefColNames>
       <RefColPositions>1</RefColPositions>
+      <RefKeyName>PK_bebc9158e480b949565b4dc7a82</RefKeyName>
       <StateNumber>526</StateNumber>
       <RefTableId>16435</RefTableId>
       <RefTableName>product</RefTableName>
       <RefTableKind>table</RefTableKind>
     </foreign-key>
-    <foreign-key id="324" parent="261" name="FK_e28d0958bcae096d6813c529c31">
+    <foreign-key id="320" parent="259" name="FK_e28d0958bcae096d6813c529c31">
       <ColNames>dealId</ColNames>
       <ObjectId>16565</ObjectId>
       <RefColNames>id</RefColNames>
       <RefColPositions>1</RefColPositions>
+      <RefKeyName>PK_9ce1c24acace60f6d7dc7a7189e</RefKeyName>
       <StateNumber>526</StateNumber>
       <RefTableId>16458</RefTableId>
       <RefTableName>deal</RefTableName>
       <RefTableKind>table</RefTableKind>
     </foreign-key>
-    <index id="325" parent="261" name="PK_5720d9619d821fea8420114e116">
-      <ColNames>productToDealId</ColNames>
-      <ObjectId>16558</ObjectId>
+    <index id="321" parent="259" name="PK_2a6e8c60104cd839f3425cfba50">
+      <ColNames>productId
+dealId</ColNames>
+      <ObjectId>16637</ObjectId>
       <Primary>1</Primary>
-      <StateNumber>526</StateNumber>
+      <StateNumber>637</StateNumber>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="326" parent="261" name="PK_5720d9619d821fea8420114e116">
-      <ObjectId>16559</ObjectId>
+    <key id="322" parent="259" name="PK_2a6e8c60104cd839f3425cfba50">
+      <ColNames>productId
+dealId</ColNames>
+      <ObjectId>16638</ObjectId>
       <Primary>1</Primary>
-      <StateNumber>526</StateNumber>
-      <UnderlyingIndexId>16558</UnderlyingIndexId>
+      <StateNumber>637</StateNumber>
+      <UnderlyingIndexId>16637</UnderlyingIndexId>
     </key>
-    <column id="327" parent="262" name="id">
+    <column id="323" parent="260" name="id">
       <DataType>integer|0s</DataType>
       <DefaultExpression>nextval(&apos;user_id_seq&apos;::regclass)</DefaultExpression>
       <NotNull>1</NotNull>
@@ -5241,51 +5234,52 @@ dealId</ColNames>
       <StateNumber>489</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="328" parent="262" name="firstName">
+    <column id="324" parent="260" name="firstName">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="329" parent="262" name="lastName">
+    <column id="325" parent="260" name="lastName">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="330" parent="262" name="email">
+    <column id="326" parent="260" name="email">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="331" parent="262" name="password">
+    <column id="327" parent="260" name="password">
       <DataType>varchar|0s</DataType>
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StateNumber>489</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="332" parent="262" name="departmentId">
+    <column id="328" parent="260" name="departmentId">
       <DataType>integer|0s</DataType>
       <Position>6</Position>
       <StateNumber>489</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <foreign-key id="333" parent="262" name="FK_3d6915a33798152a079997cad28">
+    <foreign-key id="329" parent="260" name="FK_3d6915a33798152a079997cad28">
       <ColNames>departmentId</ColNames>
       <ObjectId>16515</ObjectId>
       <RefColNames>id</RefColNames>
       <RefColPositions>1</RefColPositions>
+      <RefKeyName>PK_9a2213262c1593bffb581e382f5</RefKeyName>
       <StateNumber>489</StateNumber>
       <RefTableId>16447</RefTableId>
       <RefTableName>department</RefTableName>
       <RefTableKind>table</RefTableKind>
     </foreign-key>
-    <index id="334" parent="262" name="PK_cace4a159ff9f2512dd42373760">
+    <index id="330" parent="260" name="PK_cace4a159ff9f2512dd42373760">
       <ColNames>id</ColNames>
       <ObjectId>16476</ObjectId>
       <Primary>1</Primary>
@@ -5293,7 +5287,8 @@ dealId</ColNames>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="335" parent="262" name="PK_cace4a159ff9f2512dd42373760">
+    <key id="331" parent="260" name="PK_cace4a159ff9f2512dd42373760">
+      <ColNames>id</ColNames>
       <ObjectId>16477</ObjectId>
       <Primary>1</Primary>
       <StateNumber>489</StateNumber>
