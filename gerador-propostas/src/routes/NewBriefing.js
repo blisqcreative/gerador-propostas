@@ -46,7 +46,7 @@ const NewBriefing = () => {
         setTimings(e.target.value);
     }
     const getLead = async (id) => {
-        const response = await fetch(`${server}/leads/` + id, {
+        const response = await fetch(`${server}/lead/` + id, {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -86,6 +86,8 @@ const NewBriefing = () => {
                 date: new Date()
             })
         });
+        const data = await response.json();
+        console.log(data);
 
         if (response.status === 201) {
             console.log('Deal created');

@@ -13,7 +13,7 @@ const ListDeals = () => {
 
     const getDeals = async () => {
         let id = JSON.parse(localStorage.getItem('session')).department;
-        const response = await fetch(`${server}/deals/department/`+id);
+        const response = await fetch(`${server}/deal/department/`+id);
 
         const data = await response.json();
         console.log(data);
@@ -44,7 +44,7 @@ const ListDeals = () => {
             {deals.map((deal, index) => (
                 <div key={index} className="container justify-center grid grid-cols-5 mx-auto" onClick={() => navigate(`/deals/${deal.id}`)}>
                     <p>{deal.inner_id}</p>
-                    <p>{deal.client.name}</p>
+                    <p>{deal.client ? deal.client.name : "Sem cliente Associado"}</p>
                     <p>{deal.status}</p>
                     <div className="flex gap-2">
                         {deal.departments.map((department, index) => (

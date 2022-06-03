@@ -15,6 +15,8 @@ const cors = require("cors");
 require('dotenv').config();
 const axios = require('axios').default;
 var session = require('express-session')
+let deal = require('./routes/deal');
+let lead = require('./routes/lead');
 
 declare module 'express-session' {
     export interface SessionData {
@@ -32,6 +34,9 @@ declare module 'express-session' {
         res.setHeader('Acess-Control-Allow-Credentials', 'true');
         next();
     })
+    app.use('/lead', lead);
+    app.use('/deal', deal);
+
 
 
     await createConnection()
@@ -109,61 +114,7 @@ declare module 'express-session' {
         }
         res.json(client);
     });
-    app.get("/deal", async (req, res) => {
-        const deals = await Deal.getDealWithDepartments();
-        res.json(deals);
-    });
-    app.get("/deal/:id", async (req, res) => {
-        const {id} = req.params;
-        const deal = await Deal.getDealWithDepartmentById(parseInt(id));
-        if (!deal) {
-            return res.status(404).send("Deal not found");
-        }
-        res.json(deal);
-    });
 
-    app.post("/deal", async (req, res) => {
-        const {client, departmentsId, clientStatus, inner_id, status, work, timings} = req.body;
-        const date = new Date();
-
-
-        const user = await User.findOne();
-        const departments = [];
-
-        for (const departmentId of departmentsId) {
-            const department = await Department.findOne({where: {id: departmentId}});
-            if (!department) {
-                res.status(400).send("Department not found")
-            }
-            departments.push(department);
-        }
-
-        const deal = await Deal.create({
-            client,
-            user,
-            date,
-            clientStatus,
-            status,
-            inner_id,
-            work,
-            timings,
-        }).save();
-
-        let promisses = departments.map(department => DealToDepartment.create({
-                status: false,
-                deal,
-                department
-            }).save()
-        );
-        await Promise.all(promisses);
-
-
-        if (deal) {
-            res.status(201).send("Deal created with id: " + deal.id);
-        } else {
-            res.status(400).send("Error creating deal");
-        }
-    });
     app.get("/lastLeadId", async (req, res) => {
         const lead = await Lead.findOne({
             order: {
@@ -181,41 +132,7 @@ declare module 'express-session' {
         res.json(departments);
     });
 
-    app.get("/leads", async (req, res) => {
-        const leads = await Lead.getLeadsWithClient();
-        res.json(leads);
-    });
 
-    app.get("/leads/:id", async (req, res) => {
-        const {id} = req.params;
-        const lead = await Lead.getLeadWithClientById(id);
-        if (!lead) {
-            return res.status(404).send("Lead not found");
-        }
-        res.json(lead);
-    });
-    app.get("/deals/department/:id", async (req, res) => {
-        const {id} = req.params;
-        const deals = await Deal.getDealByDepartmentId(parseInt(id));
-
-        const dealsFormatted = deals.map(deal => ({
-            id: deal.id,
-            client: deal.client,
-            clientStatus: deal.clientStatus,
-            status: deal.status,
-            inner_id: deal.inner_id,
-            work: deal.work,
-            timings: deal.timings,
-            departments: deal.dealToDepartments.map(({status, department}) => ({
-                status,
-                id: department.id,
-                name: department.name,
-                initials: department.initials
-            })),
-        }))
-
-        res.json(dealsFormatted);
-    });
 
     app.post("/updatedLead", async (req, res) => {
         console.log("Nova lead atualizada");
@@ -265,100 +182,8 @@ declare module 'express-session' {
     });
 
     app.post("/testWebhook", async (req, res) => {
-        console.log("Nova Lead Recebida")
-        const body = req.body;
-        const idCompany = body.company ? body.company.id : null;
-        let client;
-        if (idCompany) {
-            client = await Client.findOne({where: {idCRM: body.company.id}});
-            let newClient;
-            if (!client) {
-                newClient = await axios.get(`https://blisq.teamwork.com/crm/api/v2/companies/${idCompany}.json`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + process.env.TOKEN_TW
-                    },
-                });
-                if (newClient.status === 200) {
-
-                    client = await Client.create({
-                        name: newClient.data.company.name,
-                        person: "",
-                        email: newClient.data.company.emailAddresses[0].address ? newClient.data.company.emailAddresses[0].address : "Sem email associado",
-                        phone: "",
-                        address: newClient.data.company.addressLine1 ? newClient.data.company.addressLine1 : "Sem morada",
-                        city: newClient.data.company.city ? newClient.data.company.city : "Sem cidade",
-                        state: newClient.data.company.stateOrCounty ? newClient.data.company.stateOrCounty : "Sem distrito",
-                        zip: newClient.data.company.zipcode ? newClient.data.company.zipcode : "Sem código postal",
-                        nif: 111111111,
-                        idCRM: newClient.data.company.id
-                    }).save();
-                }
-
-            }
-        } else {
-            client = null
-        }
-        const deal = await Lead.findOne({
-            order: {
-                id: "DESC"
-            }
-        });
-        let id = 1;
-        if (deal) {
-            id = deal.id
-        }
-        const date = new Date()
-        const month = date.getMonth() + 1
-        const year = date.getFullYear()
-        const year_lastTwoDigits = year.toString().substr(-2)
-        let month_twoDigits;
-        if (month < 10) {
-            month_twoDigits = '0' + month
-        } else {
-            month_twoDigits = month
-        }
-        const lead = await Lead.create({
-            inner_id: "BLISQ" + year_lastTwoDigits + month_twoDigits + id,
-            name: body.title,
-            date: date,
-            client: client,
-            crmId: body.id,
-        }).save();
-
-        if (lead) {
-            res.status(201).send("Lead created with id: " + lead.id);
-        } else {
-            res.status(400).send("Error creating lead");
-        }
-
 
     });
-
-    app.post("/deal/task/:id", async (req, res) => {
-        const body = req.body;
-        const id = req.params.id;
-        const deal = await Deal.findOne({where: {id}});
-
-        if (!deal) {
-            res.status(400).send("Deal not found");
-        }
-
-
-        let promisses = body.map(product => ProductToDeal.create({
-                hours: product.hours,
-                description: product.description,
-
-            }).save()
-        );
-        await Promise.all(promisses)
-
-        res.status(200).send("Tasks added to deal");
-
-
-    })
-
 
     app.get("/products/department/:id", async (req, res) => {
         const {id} = req.params;
@@ -369,14 +194,14 @@ declare module 'express-session' {
         console.log(products);
 
 
-        const productsFormatted = products.map((product,index) => ({
+        const productsFormatted = products.map((product, index) => ({
 
-                id: product.id,
-                name: product.productname,
-                hours: product.is_selected ? product.product_hours : 0,
-                description: product.final_description,
-                checked: product.is_selected
-            }));
+            id: product.id,
+            name: product.productname,
+            hours: product.is_selected ? product.product_hours : 0,
+            description: product.final_description,
+            checked: product.is_selected
+        }));
         res.json(productsFormatted);
     });
 

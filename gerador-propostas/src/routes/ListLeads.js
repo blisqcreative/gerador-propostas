@@ -8,7 +8,7 @@ export const ListLeads = () => {
 
     const [leads, setLeads] = useState([]);
     const getLeads = async () => {
-        const response = await fetch(`${server}/leads`, {
+        const response = await fetch(`${server}/lead`, {
             method: 'GET', headers: {
                 'Content-Type': 'application/json'
             }

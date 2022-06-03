@@ -68,7 +68,7 @@ const AddTaskToDeal = () => {
                 id
             }))
 
-        const response = await fetch(`${server}/deal/task/${params.id}`, {
+        const response = await fetch(`${server}/deal/${params.id}/products/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -88,7 +88,7 @@ const AddTaskToDeal = () => {
     return deal ? (
         <div className="w-11/12 mx-auto">
             <h1 className="text-3xl text-center">Adicionar Tarefas/Produtos à Proposta</h1>
-            <p>Cliente: {deal.client.name}</p>
+            <p>Cliente: {deal.client ? deal.client.name : "Sem cliente associado"}</p>
             <p>Proposta: {deal.inner_id}</p>
             <p>Data de Criação: {moment(deal.date).locale("pt").format("LL")}</p>
             <div className="flex justify-between mt-10">

@@ -1,7 +1,7 @@
 import {
     BaseEntity,
     Column,
-    Entity,
+    Entity, getManager, getRepository,
     JoinColumn,
     JoinTable,
     ManyToMany,
@@ -58,15 +58,16 @@ export class Deal extends BaseEntity {
 
     static async getDealWithDepartments() {
         return await Deal.createQueryBuilder("deal")
-            .leftJoinAndSelect("deal.departments", "departments")
+            .leftJoinAndSelect("deal.dealToDepartments", "departments")
+            .leftJoinAndSelect("departments.department", "department")
             .leftJoinAndSelect("deal.client", "client")
             .getMany();
     }
 
     static async getDealWithDepartmentById(id: number) {
         return await Deal.createQueryBuilder("deal")
-            .leftJoin("deal.dealToDepartments", "departmentSelect")
-            .leftJoinAndSelect("deal.dealToDepartments", "department")
+            .leftJoinAndSelect("deal.dealToDepartments", "departments")
+            .leftJoinAndSelect("departments.department", "department")
             .leftJoinAndSelect("deal.client", "client")
             .where("deal.id = :id", {id})
             .getOne();
