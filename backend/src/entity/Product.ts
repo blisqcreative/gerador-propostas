@@ -27,31 +27,23 @@ export class Product extends BaseEntity {
             .getMany();
     }
 
-    static async getProductsInDealByDepartment(departmentId: number) {
-        /*return await Product.createQueryBuilder("product")
-            .leftJoinAndSelect("product.department", "department")
-            .leftJoinAndSelect("product.productToDeals", "productToDeals")
-            .where("department.id = :id", {id: departmentId})
-            .getMany();
-            */
-
+    static async getProductsInDealByDepartment(dealId:number, departmentId: number) {
         const entityManager = getManager();
-        return await entityManager.query(`select p.id                                     as productId,
-                                                        p.name                                   as productName,
-                                                        ptd.description                          as product_description,
-                                                        ptd.hours                                as product_hours,
-                                                        p.description                            as product_in_deal_description,
-                                                        coalesce(ptd.description, p.description) as final_description,
-                                                        case
-                                                            when d.id is null then false
-                                                            else true
-                                                            end                                  as is_selected
-                                                 from product p
-                                                          left join product_to_deal ptd
-                                                                    on p.id = ptd."productId"
-                                                          left join deal d
-                                                                    on d.id = ptd."dealId"
-                                                 where p."departmentId" = $1;`,[departmentId] );
+        return await entityManager.query(`select
+                                              p.id as productId,
+                                              p.name as productName,
+                                              p.description as product_description,
+                                              ptd.description as product_in_deal_description,
+                                              case when ptd.hours is null then 0 else ptd.hours end as hours,
+                                              coalesce(ptd.description, p.description) as final_description,
+                                              case
+                                                  when ptd."dealId" is null then false
+                                                  else true
+                                                  end as is_selected
+                                          from product p
+                                                   left join (select * from product_to_deal ptd where "dealId" = $1) ptd
+                                                             on ptd."productId" = p.id
+                                          where "departmentId"=$2;`,[dealId, departmentId] );
     }
 
 

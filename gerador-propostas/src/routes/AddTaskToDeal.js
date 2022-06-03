@@ -16,16 +16,15 @@ const AddTaskToDeal = () => {
         setDeal(data);
     }
 
-    const getProductsByDepartment = async (department) => {
-        const response = await fetch(`${server}/products/department/${department}`);
+    const getProductsByDepartment = async (dealid, department) => {
+        const response = await fetch(`${server}/deal/${dealid}/products/${department}`);
         const data = await response.json();
-        console.log(data);
         setProducts(data.map(product => ({
             state: {
-                id: product.id,
-                description: product.description,
+                id: product.productid,
+                description: product.final_description,
                 hours: product.hours.toString(),
-                checked: product.checked,
+                checked: product.is_selected,
             },
             data: product
         })));
@@ -82,7 +81,7 @@ const AddTaskToDeal = () => {
 
     useEffect(() => {
         getDeal()
-        getProductsByDepartment(JSON.parse(localStorage.getItem("session")).department)
+        getProductsByDepartment(params.id,JSON.parse(localStorage.getItem("session")).department)
     }, []);
 
     return deal ? (
@@ -113,7 +112,7 @@ const AddTaskToDeal = () => {
             <div className="">
                 <label className="font-bold mb-4">Tarefas/Produtos:
                     {products.map((product, idx) => (
-                        <TaskCheckBox key={product.data.id} product={product} handleCheck={() => handleCheck(idx)}
+                        <TaskCheckBox key={idx} product={product} handleCheck={() => handleCheck(idx)}
                                       handleStateChange={handleStateChange(idx)} setHoursDiffState={setHoursDiffState(idx)}/>
                     ))}
                 </label>

@@ -17,6 +17,7 @@ const axios = require('axios').default;
 var session = require('express-session')
 let deal = require('./routes/deal');
 let lead = require('./routes/lead');
+let product = require('./routes/product');
 
 declare module 'express-session' {
     export interface SessionData {
@@ -36,6 +37,7 @@ declare module 'express-session' {
     })
     app.use('/lead', lead);
     app.use('/deal', deal);
+    app.use('/product', product);
 
 
 
@@ -196,7 +198,7 @@ declare module 'express-session' {
 
         const productsFormatted = products.map((product, index) => ({
 
-            id: product.id,
+            id: product.productid,
             name: product.productname,
             hours: product.is_selected ? product.product_hours : 0,
             description: product.final_description,

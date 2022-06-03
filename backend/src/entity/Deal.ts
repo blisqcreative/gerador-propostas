@@ -14,6 +14,7 @@ import {User} from "./User"
 import {ProductToDeal} from "./ProductToDeal"
 import {Department} from "./Department"
 import {DealToDepartment} from "./DealToDepartment"
+import {Product} from "./Product"
 
 @Entity()
 export class Deal extends BaseEntity {
@@ -90,5 +91,26 @@ export class Deal extends BaseEntity {
             .innerJoinAndSelect("department.status", "status")
             .leftJoinAndSelect("deal.client", "client")
             .getMany();
+    }
+
+    static async getProductToDealByDealId(id: number) {
+        return await ProductToDeal.createQueryBuilder("productToDeal")
+            .innerJoin("productToDeal.deal", "deal")
+            .where("deal.id = :id", {id})
+            .getMany();
+    }
+
+    //get the products in a deal joined with the products that are out of the deal filtered by the department
+    static async getProductToDealByDealIdAndDepartmentId(id: number, departmentId: number) {
+        const entityManager = getManager();
+        return await entityManager.query(`select *
+                                          from product p
+                                                   left join product_to_deal ptd on p.id = ptd."productId"
+                                                   left join deal d on ptd."dealId" = d.id
+                                          where "departmentId" = $1
+                                            and "dealId" = $2`,
+            [departmentId, id]
+        );
+
     }
 }

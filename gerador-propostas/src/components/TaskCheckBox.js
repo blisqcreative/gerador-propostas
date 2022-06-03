@@ -16,7 +16,7 @@ export const TaskCheckBox = ({product, handleCheck, handleStateChange, setHoursD
             <label>
                 <input type="checkbox" className="mr-2" checked={product.state.checked}
                        onChange={handleCheck}/>
-                {product.data.name}
+                {product.data.productname}
             </label>
             {product.state.checked &&
                 <div className="flex gap-2">

@@ -1,7 +1,6 @@
 import {Lead} from "../entity/Lead"
 import {Client} from "../entity/Client"
 import {default as axios} from "axios"
-import {Deal} from "../entity/Deal"
 
 let express = require('express');
 let router = express.Router();
@@ -49,7 +48,7 @@ router.post("/", async (req, res) => {
                 client = await Client.create({
                     name: newClient.data.company.name,
                     person: "",
-                    email: !!newClient.data.company.emailAddresses.length ? newClient.data.company.emailAddresses[0].address : "Sem email associado",
+                    email: newClient.data.company.emailAddresses[0].address ? newClient.data.company.emailAddresses[0].address : "Sem email associado",
                     phone: "",
                     address: newClient.data.company.addressLine1 ? newClient.data.company.addressLine1 : "Sem morada",
                     city: newClient.data.company.city ? newClient.data.company.city : "Sem cidade",
@@ -125,7 +124,7 @@ router.post("/update", async (req, res) => {
                 client = await Client.create({
                     name: newClient.data.company.name,
                     person: "",
-                    email: !!newClient.data.company.emailAddresses.length ? newClient.data.company.emailAddresses[0].address : "Sem email associado",
+                    email: newClient.data.company.emailAddresses[0].address ? newClient.data.company.emailAddresses[0].address : "Sem email associado",
                     phone: "",
                     address: newClient.data.company.addressLine1 ? newClient.data.company.addressLine1 : "Sem morada",
                     city: newClient.data.company.city ? newClient.data.company.city : "Sem cidade",
@@ -145,22 +144,9 @@ router.post("/update", async (req, res) => {
     console.log("Cliente no fim", client);
     lead.client = client;
 
-
-
     const updatedLead = await lead.save()
     if (updatedLead) {
-        const deal = await Deal.findOne({
-            where: {
-                inner_id: updatedLead.inner_id
-            }
-        });
-        deal.client = client;
-        const updatedDeal = await deal.save()
-        console.log("updatedDeal", updatedDeal);
-
-
-
-        res.status(201).send(`Lead updated with id: ${updatedLead.id} and updated deal with id: ${updatedDeal.id}`);
+        res.status(201).send("Lead updated with id: " + lead.id);
     } else {
         res.status(400).send("Error updating lead");
     }

@@ -3,6 +3,7 @@ import {User} from "../entity/User"
 import {Department} from "../entity/Department"
 import {DealToDepartment} from "../entity/DealToDepartment"
 import {ProductToDeal} from "../entity/ProductToDeal"
+import {Product} from "../entity/Product"
 
 let express = require('express');
 let router = express.Router();
@@ -114,17 +115,30 @@ router.post("/:id/products", async (req, res) => {
     if (!deal) {
         res.status(400).send("Deal not found");
     }
-
+    console.log("body",body);
 
     let promisses = body.map(product => ProductToDeal.create({
             hours: product.hours,
             description: product.description,
-
+            product,
+            deal
         }).save()
     );
     await Promise.all(promisses)
 
     res.status(200).send("Tasks added to deal");
+});
+
+// @rout    GET api/deal/:id/products
+// Get all products of a deal filtered by department
+router.get("/:idDeal/products/:idDepartment", async (req, res) => {
+    const id = req.params.idDeal;
+    const departmentId = req.params.idDepartment;
+
+    const result = await Product.getProductsInDealByDepartment(parseInt(id), parseInt(departmentId));
+    console.log(result);
+
+    res.json(result);
 });
 
 // @route   GET api/deal/department/:id
