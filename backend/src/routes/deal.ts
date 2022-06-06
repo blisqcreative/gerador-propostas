@@ -14,12 +14,14 @@ let router = express.Router();
 router.get('/', async (req, res) => {
 
     const deals = await Deal.getDealWithDepartments();
+
     const dealsFormatted = deals.map(deal => ({
         "id": deal.id,
         "inner_id": deal.inner_id,
         "status": deal.status,
         "clientStatus": deal.clientStatus,
         "timings": deal.timings,
+        "date": deal.date,
         "work": deal.work,
         "client": deal.client,
         "departments": deal.dealToDepartments.map(({department}) => ({
@@ -91,6 +93,7 @@ router.get("/:id", async (req, res) => {
         "status": deal.status,
         "clientStatus": deal.clientStatus,
         "timings": deal.timings,
+        "date": deal.date,
         "work": deal.work,
         "client": deal.client,
         "departments": deal.dealToDepartments.map(({department}) => ({
@@ -182,6 +185,7 @@ router.get("/department/:id", async (req, res) => {
         status: deal.status,
         inner_id: deal.inner_id,
         work: deal.work,
+        date: deal.date,
         timings: deal.timings,
         departments: deal.dealToDepartments.map(({status, department}) => ({
             status,
