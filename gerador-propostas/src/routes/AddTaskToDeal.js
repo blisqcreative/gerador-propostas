@@ -8,12 +8,20 @@ const AddTaskToDeal = () => {
 
     let params = useParams();
     const [deal, setDeal] = useState();
+    const departmentId = JSON.parse(localStorage.getItem("session")).department
+    const [departmentStatus, setDepartmentStatus] = useState(false);
 
     const [products, setProducts] = useState([]);
     const getDeal = async () => {
         const response = await fetch(`${server}/deal/${params.id}`);
         const data = await response.json();
         setDeal(data);
+    }
+
+    const getDepartmentStatus = async (department) => {
+        const response = await fetch(`${server}/deal/${params.id}/departmentStatus/${department}`);
+        const data = await response.json();
+        setDepartmentStatus(data.status);
     }
 
     const getProductsByDepartment = async (dealid, department) => {
@@ -67,12 +75,18 @@ const AddTaskToDeal = () => {
                 id
             }))
 
+
+        let body = {
+            products: finalProducts,
+            departmentStatus: departmentStatus,
+            departmentId: departmentId
+        }
         const response = await fetch(`${server}/deal/${params.id}/products/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(finalProducts)
+            body: JSON.stringify(body)
         });
         const data = await response.text()
         console.log(data)
@@ -81,7 +95,8 @@ const AddTaskToDeal = () => {
 
     useEffect(() => {
         getDeal()
-        getProductsByDepartment(params.id,JSON.parse(localStorage.getItem("session")).department)
+        getProductsByDepartment(params.id,departmentId)
+        getDepartmentStatus(departmentId)
     }, []);
 
     return deal ? (
@@ -119,6 +134,8 @@ const AddTaskToDeal = () => {
 
 
             </div>
+            <label className="font-bold mb-4 block">
+            <input className="mr-2" type="checkbox" checked={departmentStatus} onChange={() => setDepartmentStatus(!departmentStatus)}/>Concluído?</label>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mb-4"
                     onClick={() => {
                         sendProducts()

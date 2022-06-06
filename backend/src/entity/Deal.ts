@@ -113,4 +113,12 @@ export class Deal extends BaseEntity {
         );
 
     }
+    static async getStatusOfDepartmentByDealId(id: number, departmentId: number) {
+        return await DealToDepartment.createQueryBuilder("dealToDepartment")
+            .innerJoin("dealToDepartment.department", "department")
+            .innerJoin("dealToDepartment.deal", "deal")
+            .where("deal.id = :id", {id})
+            .andWhere("department.id = :departmentId", {departmentId})
+            .getOne();
+    }
 }

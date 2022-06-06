@@ -16,4 +16,12 @@ export class ProductToDeal extends BaseEntity{
 
     @ManyToOne(() => Deal, deal => deal.productToDeals, {nullable: true, primary: true})
     deal: Deal;
+
+    static async getDealsWithProducts(dealId: number) {
+        return await ProductToDeal.createQueryBuilder("productToDeal")
+            .leftJoinAndSelect("productToDeal.product", "product")
+            .leftJoinAndSelect("productToDeal.deal", "deal")
+            .where("deal.id = :id", {id: dealId})
+            .getMany();
+    }
 }

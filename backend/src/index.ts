@@ -4,12 +4,9 @@ import express from "express";
 import bcrypt from "bcrypt";
 import {User} from "./entity/User";
 import {Client} from "./entity/Client"
-import {Deal} from "./entity/Deal"
 import {Department} from "./entity/Department"
 import {Lead} from "./entity/Lead";
-import {Product} from "./entity/Product";
-import {ProductToDeal} from "./entity/ProductToDeal";
-import {DealToDepartment} from "./entity/DealToDepartment"
+
 
 const cors = require("cors");
 require('dotenv').config();
@@ -38,7 +35,6 @@ declare module 'express-session' {
     app.use('/lead', lead);
     app.use('/deal', deal);
     app.use('/product', product);
-
 
 
     await createConnection()
@@ -134,59 +130,7 @@ declare module 'express-session' {
         res.json(departments);
     });
 
-
-
-    app.post("/updatedLead", async (req, res) => {
-        console.log("Nova lead atualizada");
-        console.log(req.body);
-        res.send("recebi webhook");
-
-        const lead = await Lead.findOne({where: {crmId: req.body.id}});
-        if (!lead) {
-            return res.status(404).send("Lead not found");
-        }
-        if (req.body.client) {
-            let client = await Client.findOne({where: {idCRM: req.body.company.id}});
-            let body = req.body;
-            const idCompany = body.company ? body.company.id : null;
-            let newClient;
-            if (!client) {
-                newClient = await axios.get(`https://blisq.teamwork.com/crm/api/v2/companies/${idCompany}.json`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + process.env.TOKEN_TW
-                    },
-                });
-                if (newClient.status === 200) {
-
-                    client = await Client.create({
-                        name: newClient.data.company.name,
-                        person: "",
-                        email: newClient.data.company.emailAddresses[0].address ? newClient.data.company.emailAddresses[0].address : "Sem email associado",
-                        phone: "",
-                        address: newClient.data.company.addressLine1 ? newClient.data.company.addressLine1 : "Sem morada",
-                        city: newClient.data.company.city ? newClient.data.company.city : "Sem cidade",
-                        state: newClient.data.company.stateOrCounty ? newClient.data.company.stateOrCounty : "Sem distrito",
-                        zip: newClient.data.company.zipcode ? newClient.data.company.zipcode : "Sem código postal",
-                        nif: 111111111,
-                        idCRM: newClient.data.company.id
-                    }).save();
-                }
-
-            }
-            console.log(client);
-            lead.client = client;
-            let newLead = await lead.save();
-            console.log("Lead updated with id: " + newLead.id);
-            return res.status(200).send("Lead updated");
-        }
-    });
-
-    app.post("/testWebhook", async (req, res) => {
-
-    });
-
+    /*
     app.get("/products/department/:id", async (req, res) => {
         const {id} = req.params;
         const products = await Product.getProductsInDealByDepartment(parseInt(id));
@@ -206,6 +150,7 @@ declare module 'express-session' {
         }));
         res.json(productsFormatted);
     });
+     */
 
 
     app.get("/hello", async (req, res) => {
