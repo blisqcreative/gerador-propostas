@@ -14,7 +14,6 @@ let router = express.Router();
 router.get('/', async (req, res) => {
 
     const deals = await Deal.getDealWithDepartments();
-
     const dealsFormatted = deals.map(deal => ({
         "id": deal.id,
         "inner_id": deal.inner_id,
@@ -24,11 +23,12 @@ router.get('/', async (req, res) => {
         "date": deal.date,
         "work": deal.work,
         "client": deal.client,
-        "departments": deal.dealToDepartments.map(({department}) => ({
-            "id": department.id,
-            "name": department.name,
-            "status": department.initials
-        }))
+        departments: deal.dealToDepartments.map(({status, department}) => ({
+            status,
+            id: department.id,
+            name: department.name,
+            initials: department.initials
+        })),
     }));
     res.json(dealsFormatted);
 });
@@ -103,6 +103,29 @@ router.get("/:id", async (req, res) => {
         })),
     }
     res.json(dealFormatted);
+});
+
+
+// @route   GET api/deals/:id/products
+// Get all products of one deal
+router.get("/:id/products", async (req, res) => {
+
+    const {id} = req.params;
+    const deal = await Deal.getDealWithDepartmentById(parseInt(id));
+    if (!deal) {
+        return res.status(404).send("Deal not found");
+    }
+    const products = await ProductToDeal.getDealsWithProducts(parseInt(id));
+    const productsFormatted = products.map(product => ({
+       product: product.product,
+         hours: product.hours,
+        description: product.description,
+        sellPrice: product.sellPrice,
+        adjustedSellPrice: product.adjustedSellPrice ? product.adjustedSellPrice : 0,
+        hourRate: product.hourRate,
+    }));
+    res.json(productsFormatted);
+
 });
 
 
@@ -205,7 +228,7 @@ router.get("/:id/departmentStatus/:idDepartment", async (req, res) => {
     if (!deal) {
         return res.status(404).send("Deal not found");
     }
-    const status = await Deal.getStatusOfDepartmentByDealId(parseInt(id),parseInt(idDepartment));
+    const status = await Deal.getStatusOfDepartmentByDealId(parseInt(id), parseInt(idDepartment));
     res.json(status);
 });
 

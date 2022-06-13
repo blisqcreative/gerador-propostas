@@ -40,6 +40,9 @@ export class Deal extends BaseEntity {
     @Column()
     work: string
 
+    @Column({nullable: true})
+    dealManagement: number
+
     @Column("int", {nullable: true})
     clientId: number;
 
@@ -59,8 +62,9 @@ export class Deal extends BaseEntity {
 
     static async getDealWithDepartments() {
         return await Deal.createQueryBuilder("deal")
-            .leftJoinAndSelect("deal.dealToDepartments", "departments")
-            .leftJoinAndSelect("departments.department", "department")
+            .leftJoin("deal.dealToDepartments", "departmentSelect")
+            .leftJoinAndSelect("deal.dealToDepartments", "department")
+            .leftJoinAndSelect("department.department", "department1")
             .leftJoinAndSelect("deal.client", "client")
             .getMany();
     }

@@ -1,10 +1,9 @@
 import {useEffect, useState} from "react"
-import {useLocation, useNavigate, useParams} from "react-router-dom"
+import {useNavigate, useParams} from "react-router-dom"
 import {server} from "../utils/server"
 
 const NewBriefing = () => {
 
-    const location = useLocation()
     let navigate = useNavigate();
     let { id } = useParams();
 
@@ -26,9 +25,6 @@ const NewBriefing = () => {
         getDepartments();
     }, []);
 
-    const handleClient = (e) => {
-        setClientNif(e.target.value);
-    }
     const handleDepartments = (e) => {
         if (e.target.checked) {
             setSelectedDepartments([...selectedDepartments, e.target.value]);

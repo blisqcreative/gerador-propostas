@@ -1,10 +1,11 @@
-import {useParams} from "react-router-dom"
+import {useNavigate, useParams} from "react-router-dom"
 import {useEffect, useState} from "react"
 import moment from "moment"
 import {TaskCheckBox} from "../components/TaskCheckBox"
 import {server} from "../utils/server.js"
 
 const AddTaskToDeal = () => {
+    const navigate = useNavigate();
 
     let params = useParams();
     const [deal, setDeal] = useState();
@@ -89,7 +90,9 @@ const AddTaskToDeal = () => {
             body: JSON.stringify(body)
         });
         const data = await response.text()
-        console.log(data)
+        console.log(data);
+
+        navigate("/home")
     }
 
 

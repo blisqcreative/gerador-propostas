@@ -1,6 +1,3 @@
-import {useRef, useState} from "react"
-
-
 export const TaskCheckBox = ({product, handleCheck, handleStateChange, setHoursDiffState}) => {
 
 

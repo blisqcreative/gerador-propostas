@@ -11,8 +11,11 @@ import NewBriefing from "./routes/NewBriefing"
 import ListDeals from "./routes/ListDeals"
 import AddTaskToDeal from "./routes/AddTaskToDeal"
 import {ListLeads} from "./routes/ListLeads"
+import {Dashboard} from "./routes/Dashboard"
 
 const rootElement = document.getElementById("root");
+
+
 ReactDOM.render(
     <BrowserRouter>
         <Routes>
@@ -23,6 +26,7 @@ ReactDOM.render(
             <Route path="/leads" element={<ListLeads />} />
             <Route path="/deals/:id" element={<AddTaskToDeal />} />
             <Route path="/NewClient" element={<NewClient />} />
+            <Route path="/dashboard/:id" element={<Dashboard />} />
         </Routes>
     </BrowserRouter>,
     rootElement
