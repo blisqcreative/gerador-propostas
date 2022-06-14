@@ -117,14 +117,40 @@ router.get("/:id/products", async (req, res) => {
     }
     const products = await ProductToDeal.getDealsWithProducts(parseInt(id));
     const productsFormatted = products.map(product => ({
-       product: product.product,
-         hours: product.hours,
+        id_deal: product.deal.id,
+        product: product.product,
+        hours: product.hours,
         description: product.description,
+        cost: product.cost,
+        netMargin: product.netMargin,
+        netMarginPercentage: product.netMarginPercentage,
         sellPrice: product.sellPrice,
         adjustedSellPrice: product.adjustedSellPrice ? product.adjustedSellPrice : 0,
         hourRate: product.hourRate,
     }));
     res.json(productsFormatted);
+});
+
+router.post("/:id/updateProducts", async (req, res) => {
+    const {id} = req.params;
+    const products = req.body;
+    const deal = await Deal.findOne({where: {id}});
+    if (!deal) {
+        return res.status(404).send("Deal not found");
+    }
+    const promisses = products.map(product => ProductToDeal.create({
+        deal,
+        product: product.product,
+        hourRate: product.hourRate,
+        sellPrice: product.sellPrice,
+        hours: product.hours,
+        description: product.description,
+        adjustedSellPrice: product.adjustedSellPrice > product.sellPrice ? product.adjustedSellPrice : product.sellPrice,
+
+    }).save());
+
+    await Promise.all(promisses);
+    res.status(200).send("Products updated");
 
 });
 
@@ -154,6 +180,10 @@ router.post("/:id/products", async (req, res) => {
     let promisses = body.products.map(product => ProductToDeal.create({
             hours: product.hours,
             description: product.description,
+            cost: product.hours * 25,
+            hourRate: 35,
+            sellPrice: product.hours * 35,
+            adjustedSellPrice: product.hours * 35,
             product,
             deal
         }).save()

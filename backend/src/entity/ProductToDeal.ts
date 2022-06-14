@@ -29,6 +29,15 @@ export class ProductToDeal extends BaseEntity{
     @Column({nullable:true})
     adjustedSellPrice: number
 
+    @Column({nullable: true})
+    cost: number;
+
+    @Column({nullable: true})
+    netMargin: number;
+
+    @Column({nullable: true, type: "decimal"})
+    netMarginPercentage: number;
+
     @ManyToOne(() => Product, product => product.productToDeals, {nullable: true, primary: true})
     product: Product
 
@@ -39,12 +48,17 @@ export class ProductToDeal extends BaseEntity{
     setSellPrice() {
         this.hourRate = this.hourRate ? this.hourRate : 35;
         this.sellPrice = this.hourRate * this.hours;
+        this.netMargin = this.adjustedSellPrice - this.cost;
+        this.netMarginPercentage = Math.round(this.netMargin / this.adjustedSellPrice * 100);
     }
 
     @BeforeUpdate()
     updateSellPrice() {
         this.hourRate = this.hourRate ? this.hourRate : 35;
         this.sellPrice = (this.hourRate ? this.hourRate : 35) * this.hours;
+        this.cost = 25 * this.hours;
+        this.netMargin = this.adjustedSellPrice - this.cost;
+        this.netMarginPercentage = Math.round(this.netMargin / this.adjustedSellPrice * 100);
     }
 
     static async getDealsWithProducts(dealId: number) {

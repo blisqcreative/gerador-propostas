@@ -18,12 +18,13 @@
       "dotenv": "^16.0.1",
       "express": "^4.17.3",
       "express-session": "^1.17.3",
+      "mysql": "^2.18.1",
       "pg": "^8.4.0",
       "reflect-metadata": "^0.1.10",
       "typeorm": "0.2.38"
    },
    "scripts": {
-      "start": "node_modules/.bin/ts-node src/index.ts",
+      "start": "ts-node src/index.ts",
       "dev": "ts-node-dev --respawn src/index.ts"
    }
 }

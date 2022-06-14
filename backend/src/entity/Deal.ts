@@ -104,19 +104,7 @@ export class Deal extends BaseEntity {
             .getMany();
     }
 
-    //get the products in a deal joined with the products that are out of the deal filtered by the department
-    static async getProductToDealByDealIdAndDepartmentId(id: number, departmentId: number) {
-        const entityManager = getManager();
-        return await entityManager.query(`select *
-                                          from product p
-                                                   left join product_to_deal ptd on p.id = ptd."productId"
-                                                   left join deal d on ptd."dealId" = d.id
-                                          where "departmentId" = $1
-                                            and "dealId" = $2`,
-            [departmentId, id]
-        );
 
-    }
     static async getStatusOfDepartmentByDealId(id: number, departmentId: number) {
         return await DealToDepartment.createQueryBuilder("dealToDepartment")
             .innerJoin("dealToDepartment.department", "department")
