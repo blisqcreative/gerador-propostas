@@ -1,1 +1,1 @@
-export const server = "https://api.tasks.blisq.pt:8143";
+export const server = "http://api.tasks.blisq.pt:8143";

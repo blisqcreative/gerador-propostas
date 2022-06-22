@@ -25,7 +25,6 @@ ReactDOM.render(
             <Route path="/deals" element={<ListDeals />} />
             <Route path="/leads" element={<ListLeads />} />
             <Route path="/deals/:id" element={<AddTaskToDeal />} />
-            <Route path="/NewClient" element={<NewClient />} />
             <Route path="/dashboard/:id" element={<Dashboard />} />
         </Routes>
     </BrowserRouter>,
